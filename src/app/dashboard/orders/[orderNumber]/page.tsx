@@ -37,6 +37,7 @@ import { getOrderPaymentSummary } from "@/lib/data/payments";
 import { getSiteSetting } from "@/lib/data/settings";
 import { formatDate, formatINR, formatContactMethod } from "@/lib/utils";
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { requireClient } from "@/lib/auth/guards";
 
 interface OrderDetailPageProps {
   params: {
@@ -52,9 +53,20 @@ export async function generateMetadata({ params }: OrderDetailPageProps) {
 }
 
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
+  let user: any = null;
+  let profile: any = null;
+  try {
+    const auth = await requireClient();
+    user = auth.user;
+    profile = auth.profile;
+  } catch {
+    notFound();
+  }
+
   const order = await getOrderByNumber(params.orderNumber);
 
-  if (!order) {
+  // Strict ownership check: client can never open another client's order by changing the URL
+  if (!order || (profile?.role !== "admin" && order.client_id !== user.id)) {
     notFound();
   }
 

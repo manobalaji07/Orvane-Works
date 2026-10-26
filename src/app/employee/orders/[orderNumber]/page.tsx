@@ -32,6 +32,7 @@ import {
 } from "@/lib/data/orders";
 import { formatDate, formatContactMethod } from "@/lib/utils";
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { requireEmployee } from "@/lib/auth/guards";
 
 interface EmployeeOrderDetailPageProps {
   params: {
@@ -51,9 +52,25 @@ export async function generateMetadata({
 export default async function EmployeeOrderDetailPage({
   params,
 }: EmployeeOrderDetailPageProps) {
+  let user: any = null;
+  let profile: any = null;
+  try {
+    const auth = await requireEmployee();
+    user = auth.user;
+    profile = auth.profile;
+  } catch {
+    notFound();
+  }
+
   const order = await getOrderByNumber(params.orderNumber);
 
-  if (!order) {
+  // Strict assignment check: employee can only view orders assigned to them (or admin)
+  if (
+    !order ||
+    (profile?.role !== "admin" &&
+      order.preferred_employee_id !== user.id &&
+      !(order as any).assigned_employee_ids?.includes(user.id))
+  ) {
     notFound();
   }
 
