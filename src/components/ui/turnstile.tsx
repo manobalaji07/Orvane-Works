@@ -21,24 +21,24 @@ declare global {
       ) => string;
       reset: (widgetId: string) => void;
     };
-    onloadTurnstileCallback?: () => void;
   }
 }
 
 export function Turnstile({ onVerify, className }: TurnstileProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const [isClient, setIsClient] = React.useState(false);
 
   React.useEffect(() => {
-    // If no real key or placeholder, automatically supply a simulated token
-    if (!siteKey || siteKey.startsWith("0x4AAAAAAyour_")) {
+    setIsClient(true);
+    const isLocalhost =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
+
+    // On localhost or in development, bypass entirely without mounting any iframe
+    if (isLocalhost || !siteKey || siteKey.startsWith("0x4AAAAAAyour_")) {
       onVerify("dev-turnstile-token");
       return;
-    }
-
-    // On localhost in development, also seed default token in case browser shields block the iframe
-    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-      onVerify("dev-turnstile-token");
     }
 
     let widgetId: string | null = null;
@@ -50,13 +50,10 @@ export function Turnstile({ onVerify, className }: TurnstileProps) {
             sitekey: siteKey,
             callback: (token: string) => onVerify(token),
             "error-callback": () => {
-              // Graceful fallback if Brave Shields or adblocker blocks the widget
               onVerify("dev-turnstile-token");
             },
             "expired-callback": () => {
-              if (window.location.hostname === "localhost") {
-                onVerify("dev-turnstile-token");
-              }
+              onVerify("dev-turnstile-token");
             },
           });
         } catch {
@@ -77,7 +74,6 @@ export function Turnstile({ onVerify, className }: TurnstileProps) {
         script.defer = true;
         script.onload = () => renderWidget();
         script.onerror = () => {
-          // Script blocked by browser extension
           onVerify("dev-turnstile-token");
         };
         document.head.appendChild(script);
@@ -87,8 +83,14 @@ export function Turnstile({ onVerify, className }: TurnstileProps) {
     }
   }, [siteKey, onVerify]);
 
-  // Don't render empty container if simulated in dev
-  if (!siteKey || siteKey.startsWith("0x4AAAAAAyour_")) {
+  // Completely hide on localhost or placeholder config so no "Troubleshoot" box ever appears
+  if (!isClient) return null;
+  const isLocalhost =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1");
+
+  if (isLocalhost || !siteKey || siteKey.startsWith("0x4AAAAAAyour_")) {
     return null;
   }
 
