@@ -53,12 +53,42 @@ export async function submitContactMessageAction(input: ContactInput) {
 
   try {
     const supabase = createAdminClient();
+
+    let resolvedServiceId: string | null = null;
+    let formattedMessage = message;
+
+    if (serviceId && serviceId.trim()) {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(serviceId);
+      if (isUuid) {
+        const { data: svc } = await supabase.from("services").select("id").eq("id", serviceId).maybeSingle();
+        if (svc) {
+          resolvedServiceId = svc.id;
+        }
+      } else {
+        const { data: svc } = await supabase.from("services").select("id").eq("slug", serviceId).maybeSingle();
+        if (svc) {
+          resolvedServiceId = svc.id;
+        } else {
+          // If slug does not match a DB service row, record the requested service clearly in the message body
+          const serviceLabels: Record<string, string> = {
+            "web-development": "Web Design & Development",
+            "video-editing": "Video Editing & Reels",
+            "content-creation": "Content & Brand Assets",
+            "hardware-iot": "Hardware & IoT Projects",
+            "other": "Other / Custom Scope",
+          };
+          const serviceLabel = serviceLabels[serviceId] || serviceId;
+          formattedMessage = `[Requested Service: ${serviceLabel}]\n\n${message}`;
+        }
+      }
+    }
+
     const { data, error } = await supabase.from("contact_messages").insert({
       name,
       email,
       phone: phone || null,
-      service_id: serviceId || null,
-      message,
+      service_id: resolvedServiceId,
+      message: formattedMessage,
       ip_hash: "ip_anonymized",
       is_handled: false,
     }).select().single();
