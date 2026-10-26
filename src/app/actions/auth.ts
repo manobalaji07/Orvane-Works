@@ -13,6 +13,7 @@ import {
 import { getPostLoginRedirect, type UserRole, type UserStatus } from "@/lib/auth/roles";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { verifyTurnstileToken } from "@/lib/security/turnstile";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 
@@ -339,8 +340,30 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
 
 /**
  * Sign Out Action
+ * Instantly removes session cookies and redirects to /login with zero delay.
  */
-export async function signOutAction(): Promise<void> {
+export async function signOutAction(): Promise<never> {
+  const cookieStore = cookies();
   const supabase = createClient();
-  await supabase.auth.signOut();
+
+  // 1. Immediately delete all Supabase auth cookie chunks locally
+  const allCookies = cookieStore.getAll();
+  for (const c of allCookies) {
+    if (c.name.startsWith("sb-") && c.name.includes("-auth-token")) {
+      cookieStore.delete(c.name);
+    }
+  }
+
+  // 2. Clear local session without hanging on network latency
+  try {
+    await Promise.race([
+      supabase.auth.signOut({ scope: "local" }),
+      new Promise((resolve) => setTimeout(resolve, 200)),
+    ]);
+  } catch {
+    // Ignore any logout network timeout
+  }
+
+  // 3. Immediately redirect to login
+  redirect("/login");
 }
