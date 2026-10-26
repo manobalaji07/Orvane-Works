@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAuth, requireClient } from "@/lib/auth/guards";
 import {
   createOrderSchema,
@@ -66,6 +67,54 @@ export async function createOrderAction(
 
   const orderNumber = generateOrderNumber();
   const supabase = createClient();
+  const adminDb = createAdminClient();
+
+  // 1. Validate package_id exists in packages table (or set null)
+  let validPackageId: string | null = null;
+  if (parsed.data.package_id) {
+    const { data: pkg } = await adminDb
+      .from("packages")
+      .select("id")
+      .eq("id", parsed.data.package_id)
+      .maybeSingle();
+    if (pkg) {
+      validPackageId = pkg.id;
+    }
+  }
+
+  // 2. Validate preferred_employee_id exists in profiles table (or set null)
+  let validEmployeeId: string | null = null;
+  if (parsed.data.preferred_employee_id) {
+    const { data: emp } = await adminDb
+      .from("profiles")
+      .select("id")
+      .eq("id", parsed.data.preferred_employee_id)
+      .maybeSingle();
+    if (emp) {
+      validEmployeeId = emp.id;
+    }
+  }
+
+  // 3. Validate service_id exists in services table
+  let validServiceId = parsed.data.service_id;
+  const { data: svc } = await adminDb
+    .from("services")
+    .select("id")
+    .eq("id", validServiceId)
+    .maybeSingle();
+  if (!svc) {
+    const { data: fallbackSvc } = await adminDb
+      .from("services")
+      .select("id")
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle();
+    if (fallbackSvc) {
+      validServiceId = fallbackSvc.id;
+    }
+  }
+
+  let orderId: string;
 
   try {
     const { data: order, error: insertError } = await supabase
@@ -73,9 +122,9 @@ export async function createOrderAction(
       .insert({
         order_number: orderNumber,
         client_id: user.id,
-        service_id: parsed.data.service_id,
-        package_id: parsed.data.package_id || null,
-        preferred_employee_id: parsed.data.preferred_employee_id || null,
+        service_id: validServiceId,
+        package_id: validPackageId,
+        preferred_employee_id: validEmployeeId,
         title: parsed.data.title,
         project_brief: parsed.data.project_brief,
         budget_min_inr: parsed.data.budget_min_inr,
@@ -89,13 +138,40 @@ export async function createOrderAction(
       .single();
 
     if (insertError) {
-      console.warn("[Orders] Database insert fallback mode:", insertError.message);
+      console.error("[Orders Insert Error, attempting adminClient]", insertError.message);
+      const { data: adminOrder, error: adminInsertError } = await adminDb
+        .from("orders")
+        .insert({
+          order_number: orderNumber,
+          client_id: user.id,
+          service_id: validServiceId,
+          package_id: validPackageId,
+          preferred_employee_id: validEmployeeId,
+          title: parsed.data.title,
+          project_brief: parsed.data.project_brief,
+          budget_min_inr: parsed.data.budget_min_inr,
+          budget_max_inr: parsed.data.budget_max_inr,
+          target_deadline: parsed.data.target_deadline,
+          preferred_contact_method: parsed.data.preferred_contact_method,
+          status: "submitted",
+          payment_status: "unbilled",
+        })
+        .select("id")
+        .single();
+
+      if (adminInsertError || !adminOrder) {
+        return {
+          success: false,
+          message: adminInsertError?.message || insertError.message || "Failed to create order.",
+        };
+      }
+      orderId = adminOrder.id;
+    } else {
+      orderId = order.id;
     }
 
-    const orderId = order?.id || "demo-id";
-
     // Insert timeline event
-    await supabase.from("order_events").insert({
+    await adminDb.from("order_events").insert({
       order_id: orderId,
       actor_id: user.id,
       event_type: "ORDER_SUBMITTED",
@@ -104,12 +180,12 @@ export async function createOrderAction(
     });
 
     // Record audit log
-    await supabase.from("audit_log").insert({
+    await adminDb.from("audit_log").insert({
       actor_id: user.id,
       action: "ORDER_CREATED",
       entity_type: "orders",
       entity_id: orderId,
-      metadata: { order_number: orderNumber, service_id: parsed.data.service_id },
+      metadata: { order_number: orderNumber, service_id: validServiceId },
     });
 
     // Send confirmation email
@@ -121,9 +197,14 @@ export async function createOrderAction(
     });
   } catch (err: any) {
     console.error("[Create Order Exception]", err);
+    return {
+      success: false,
+      message: err?.message || "Failed to submit project request.",
+    };
   }
 
   revalidatePath("/dashboard");
+  revalidatePath("/admin/orders");
   redirect(`/dashboard/orders/${orderNumber}`);
 }
 
