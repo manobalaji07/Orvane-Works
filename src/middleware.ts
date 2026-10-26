@@ -14,10 +14,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Session token check from cookies (Supabase auth tokens)
+  // Session token check from cookies (Supabase auth tokens, including chunked .0, .1)
   const hasAuthCookie = request.cookies
     .getAll()
-    .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token"));
 
   // If user is not authenticated, redirect to login with callbackUrl
   if (!hasAuthCookie) {
