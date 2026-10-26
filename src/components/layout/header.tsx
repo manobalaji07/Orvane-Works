@@ -27,28 +27,21 @@ export function Header() {
         {/* Brand Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 transition-opacity hover:opacity-90 shrink-0"
+          className="flex items-center gap-2.5 transition-opacity hover:opacity-90 shrink-0 group"
           aria-label={`${SITE_CONFIG.name} – Home`}
         >
-          <Image
-            src="/brand/logo-icon.png"
-            alt=""
-            width={32}
-            height={32}
-            className="h-8 w-8 object-contain"
-            priority
-          />
-          <Image
-            src="/brand/logo-wordmark.png"
-            alt={SITE_CONFIG.name}
-            width={120}
-            height={36}
-            className="h-8 w-auto object-contain hidden sm:block dark:invert"
-            priority
-          />
-          {/* Fallback text for tiny screens */}
-          <span className="sm:hidden font-display text-lg font-bold tracking-tight text-foreground leading-none">
-            ORVANE WORKS<span className="text-primary">.</span>
+          <div className="relative flex items-center justify-center h-8 w-8 rounded-md overflow-hidden dark:ring-1.5 dark:ring-[#F6F3EE] p-0.5 transition-all">
+            <Image
+              src="/brand/logo-512.png"
+              alt="Orvane Works Logo"
+              width={32}
+              height={32}
+              className="h-full w-full object-contain"
+              priority
+            />
+          </div>
+          <span className="font-display text-lg font-bold tracking-tight text-foreground leading-none">
+            Orvane Works
           </span>
         </Link>
 

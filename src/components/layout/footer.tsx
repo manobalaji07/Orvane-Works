@@ -24,23 +24,21 @@ export function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 transition-opacity hover:opacity-80"
+              className="inline-flex items-center gap-2.5 transition-opacity hover:opacity-80"
               aria-label={`${SITE_CONFIG.name} – Home`}
             >
-              <Image
-                src="/brand/logo-icon.png"
-                alt=""
-                width={28}
-                height={28}
-                className="h-7 w-7 object-contain"
-              />
-              <Image
-                src="/brand/logo-wordmark.png"
-                alt={SITE_CONFIG.name}
-                width={110}
-                height={32}
-                className="h-7 w-auto object-contain dark:invert"
-              />
+              <div className="relative flex items-center justify-center h-7 w-7 rounded-md overflow-hidden dark:ring-1.5 dark:ring-[#F6F3EE] p-0.5">
+                <Image
+                  src="/brand/logo-512.png"
+                  alt="Orvane Works Logo"
+                  width={28}
+                  height={28}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <span className="font-display text-lg font-bold tracking-tight text-foreground">
+                Orvane Works
+              </span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
               A freelance digital studio run by engineering students in

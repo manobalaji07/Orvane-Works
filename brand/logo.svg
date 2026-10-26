@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Navy Hexagon with dynamic dark-mode cream outline -->
+  <polygon points="256,32 450,144 450,368 256,480 62,368 62,144" fill="#0E1B2E" stroke="#F6F3EE" stroke-width="6" stroke-linejoin="round" />
+  <!-- Inner stylized geometrical O emblem -->
+  <polygon points="256,116 380,188 380,324 256,396 132,324 132,188" fill="#162A45" stroke="#F6F3EE" stroke-width="2" />
+  <polygon points="256,180 320,217 320,295 256,332 192,295 192,217" fill="#C8341B" />
+</svg>
