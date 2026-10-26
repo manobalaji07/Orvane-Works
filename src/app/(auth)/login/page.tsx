@@ -17,6 +17,7 @@ import {
 import { signInAction } from "@/app/actions/auth";
 import { SITE_CONFIG } from "@/lib/constants/site";
 import { Turnstile } from "@/components/ui/turnstile";
+import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
   const router = useRouter();
@@ -162,8 +163,26 @@ function LoginForm() {
           type="button"
           variant="outline"
           className="w-full gap-2 text-xs font-medium"
-          onClick={() => {
-            alert("Google Client OAuth will redirect to your Supabase OAuth provider.");
+          disabled={isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+            setErrorMessage(null);
+            try {
+              const supabase = createClient();
+              const { error } = await supabase.auth.signInWithOAuth({
+                provider: "google",
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                },
+              });
+              if (error) {
+                setErrorMessage(error.message);
+                setIsLoading(false);
+              }
+            } catch (err: any) {
+              setErrorMessage(err?.message || "Failed to initialize Google login.");
+              setIsLoading(false);
+            }
           }}
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">

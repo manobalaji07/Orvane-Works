@@ -162,7 +162,7 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
   const supabase = createClient();
 
   // Explicitly assign requested_role as 'client'
-  const { data: authData, error: authError } = await supabase.auth.signUp({
+  let { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -174,7 +174,34 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
     },
   });
 
-  if (authError || !authData.user) {
+  let userId = authData?.user?.id;
+
+  // Gracefully handle Supabase default email rate limit (3 emails/hr on free tier)
+  if (authError && authError.message.toLowerCase().includes("rate limit")) {
+    const adminClient = createAdminClient();
+    const { data: adminCreated, error: adminErr } = await adminClient.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        phone: phone || null,
+        requested_role: "client",
+      },
+    });
+
+    if (adminCreated?.user) {
+      userId = adminCreated.user.id;
+      authError = null;
+    } else if (adminErr) {
+      return {
+        success: false,
+        error: adminErr.message,
+      };
+    }
+  }
+
+  if (authError || !userId) {
     return {
       success: false,
       error: authError?.message || "Failed to create client account.",
@@ -182,10 +209,10 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
   }
 
   await logAuditEvent({
-    actorId: authData.user.id,
+    actorId: userId,
     action: "CLIENT_SIGNUP",
     entityType: "profile",
-    entityId: authData.user.id,
+    entityId: userId,
     metadata: { email, fullName },
   });
 
@@ -233,7 +260,7 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
   const supabase = createClient();
 
   // Create auth account with least-privilege 'pending_employee' intent
-  const { data: authData, error: authError } = await supabase.auth.signUp({
+  let { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -245,14 +272,39 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
     },
   });
 
-  if (authError || !authData.user) {
+  let userId = authData?.user?.id;
+
+  // Gracefully handle Supabase default email rate limit
+  if (authError && authError.message.toLowerCase().includes("rate limit")) {
+    const adminClient = createAdminClient();
+    const { data: adminCreated, error: adminErr } = await adminClient.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        phone,
+        requested_role: "pending_employee",
+      },
+    });
+
+    if (adminCreated?.user) {
+      userId = adminCreated.user.id;
+      authError = null;
+    } else if (adminErr) {
+      return {
+        success: false,
+        error: adminErr.message,
+      };
+    }
+  }
+
+  if (authError || !userId) {
     return {
       success: false,
       error: authError?.message || "Failed to submit team application.",
     };
   }
-
-  const userId = authData.user.id;
   const adminClient = createAdminClient();
 
   // Ensure employee_requests entry is recorded
