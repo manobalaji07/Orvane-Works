@@ -1,7 +1,7 @@
 # Progress: Prompt 2 Implementation
 
 - [x] Task 0: Check the earlier work (demo removal, test verification, app name)
-- [ ] Task 1: Links (site_settings integration, check-links script, WhatsApp button, Turnstile contact form)
+- [x] Task 1: Links (site_settings integration, check-links script, WhatsApp button, Turnstile contact form)
 - [ ] Task 2: Schema (supabase/migrations, database functions, generated types, src/lib/db/ layer)
 - [ ] Task 3: Security & RLS (table policies, permission & order isolation tests, verification suite)
 - [ ] Task 4: Wire every screen (data layer integration, loading/empty/error states, ISR revalidation)

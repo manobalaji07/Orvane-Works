@@ -3,6 +3,11 @@
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAuditEvent } from "./auth";
+import { verifyTurnstileToken } from "@/lib/security/turnstile";
+import {
+  sendContactConfirmationEmail,
+  sendContactAdminNotificationEmail,
+} from "@/lib/email";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -35,7 +40,16 @@ export async function submitContactMessageAction(input: ContactInput) {
     };
   }
 
-  const { name, email, phone, serviceId, message } = parsed.data;
+  const { name, email, phone, serviceId, message, turnstileToken } = parsed.data;
+
+  // Cloudflare Turnstile bot verification
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return {
+      success: false,
+      error: "Spam verification failed. Please refresh the page and try again.",
+    };
+  }
 
   try {
     const supabase = createAdminClient();
@@ -53,6 +67,21 @@ export async function submitContactMessageAction(input: ContactInput) {
       console.error("[Contact Message DB Error]", error);
       return { success: false, error: "Failed to store message. Please try again." };
     }
+
+    // Send notification to company inbox
+    await sendContactAdminNotificationEmail({
+      name,
+      email,
+      phone: phone || undefined,
+      service: serviceId || undefined,
+      message,
+    });
+
+    // Send confirmation to the visitor
+    await sendContactConfirmationEmail({
+      name,
+      email,
+    });
 
     await logAuditEvent({
       action: "CONTACT_MESSAGE_RECEIVED",

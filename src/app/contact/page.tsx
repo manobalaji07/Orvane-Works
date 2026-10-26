@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Mail, Phone, MapPin, Send, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SITE_CONFIG } from "@/lib/constants/site";
 import { submitContactMessageAction } from "@/app/actions/public";
+import { Turnstile } from "@/components/ui/turnstile";
 
 export default function ContactPage() {
   const [name, setName] = React.useState("");
@@ -16,6 +18,7 @@ export default function ContactPage() {
   const [phone, setPhone] = React.useState("");
   const [service, setService] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const [turnstileToken, setTurnstileToken] = React.useState<string>("");
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
@@ -34,6 +37,7 @@ export default function ContactPage() {
         phone,
         serviceId: service || undefined,
         message,
+        turnstileToken,
       });
 
       if (!res.success) {
@@ -112,7 +116,7 @@ export default function ContactPage() {
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
-                    +91 98765 43210 (Click to chat)
+                    {SITE_CONFIG.phone} (Click to chat)
                   </a>
                 </div>
               </div>
@@ -124,7 +128,7 @@ export default function ContactPage() {
                     Madurai Studio Hub
                   </span>
                   <span className="text-muted-foreground text-xs leading-relaxed">
-                    Madurai, Tamil Nadu 625020, India
+                    {SITE_CONFIG.address}
                   </span>
                 </div>
               </div>
@@ -139,9 +143,9 @@ export default function ContactPage() {
               You can sign up for our Client Portal to submit structured briefs,
               upload reference files, and receive formal proposals.
             </p>
-            <a href="/login" className="inline-block text-xs font-semibold text-primary hover:underline">
+            <Link href="/login" className="inline-block text-xs font-semibold text-primary hover:underline">
               Go to Client Portal Login →
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -279,6 +283,8 @@ export default function ContactPage() {
                       disabled={isLoading}
                     />
                   </div>
+
+                  <Turnstile onVerify={setTurnstileToken} />
 
                   <Button
                     type="submit"
