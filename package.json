@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "admin:create": "vite-node scripts/create-admin.ts",
+    "admin:password": "vite-node scripts/set-admin-password.ts",
     "check-links": "vite-node scripts/check-links.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\""
