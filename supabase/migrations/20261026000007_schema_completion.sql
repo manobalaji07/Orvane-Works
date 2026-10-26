@@ -76,8 +76,7 @@ create index if not exists idx_order_messages_order_id on public.order_messages(
 create index if not exists idx_order_files_order_id on public.order_files(order_id);
 
 create index if not exists idx_order_payments_order_id on public.order_payments(order_id);
-create index if not exists idx_order_payments_client_id on public.order_payments(client_id);
-create index if not exists idx_order_payments_status on public.order_payments(status);
+create index if not exists idx_order_payments_payment_type on public.order_payments(payment_type);
 
 create index if not exists idx_quotes_order_id on public.quotes(order_id);
 create index if not exists idx_quotes_client_id on public.quotes(client_id);
