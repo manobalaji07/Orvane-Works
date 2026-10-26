@@ -33,6 +33,8 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 10;
 
   const filteredOrders = orders.filter((order) => {
     const matchesStatus =
@@ -45,6 +47,12 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
         order.client_name.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
+
+  const totalPages = Math.ceil(filteredOrders.length / pageSize) || 1;
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const statuses: { label: string; value: string }[] = [
     { label: "All Orders", value: "all" },
@@ -100,7 +108,7 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
               <p>Try resetting the search query or status filter.</p>
             </div>
           ) : (
-            filteredOrders.map((order) => (
+            paginatedOrders.map((order) => (
               <div
                 key={order.id}
                 className="p-4 hover:bg-muted/10 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4"
@@ -161,6 +169,34 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
             ))
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="p-3 bg-muted/20 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+            <span>
+              Page {currentPage} of {totalPages} ({filteredOrders.length} orders)
+            </span>
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs"
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs"
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );

@@ -492,6 +492,11 @@ export async function updateSiteSettingAction(
     }
 
     revalidatePath("/admin/content");
+    revalidatePath("/");
+    revalidatePath("/contact");
+    revalidatePath("/privacy");
+    revalidatePath("/terms");
+    revalidateTag("public-content");
     // Revalidate all order pages so new instructions appear immediately
     revalidatePath("/dashboard/orders/[orderNumber]", "page");
     return { success: true, message: `"${key}" updated successfully.` };

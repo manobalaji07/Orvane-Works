@@ -86,22 +86,13 @@ export interface OrderEvent {
   created_at: string;
 }
 
-// Fallback empty data structures
-export const DEMO_ORDERS: Order[] = [];
-
-export const DEMO_MESSAGES: Record<string, OrderMessage[]> = {};
-
-export const DEMO_FILES: Record<string, OrderFile[]> = {};
-
-export const DEMO_EVENTS: Record<string, OrderEvent[]> = {};
-
 /**
  * Fetch all orders for a client
  */
 export async function getClientOrders(clientId?: string): Promise<Order[]> {
   try {
     const supabase = createClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("orders")
       .select(`
         *,
@@ -111,8 +102,13 @@ export async function getClientOrders(clientId?: string): Promise<Order[]> {
       `)
       .order("created_at", { ascending: false });
 
+    if (clientId) {
+      query = query.eq("client_id", clientId);
+    }
+
+    const { data, error } = await query;
     if (error || !data || data.length === 0) {
-      return DEMO_ORDERS;
+      return [];
     }
 
     return data.map((row: any) => ({
@@ -122,7 +118,7 @@ export async function getClientOrders(clientId?: string): Promise<Order[]> {
       preferred_employee_name: row.preferred_profile?.full_name || null,
     }));
   } catch {
-    return DEMO_ORDERS;
+    return [];
   }
 }
 
@@ -147,8 +143,7 @@ export async function getOrderByNumber(
       .single();
 
     if (error || !data) {
-      const demo = DEMO_ORDERS.find((o) => o.order_number === orderNumber);
-      return demo || null;
+      return null;
     }
 
     return {
@@ -160,8 +155,7 @@ export async function getOrderByNumber(
       client_email: data.client_profile?.email,
     };
   } catch {
-    const demo = DEMO_ORDERS.find((o) => o.order_number === orderNumber);
-    return demo || null;
+    return null;
   }
 }
 
@@ -184,7 +178,7 @@ export async function getOrderMessages(
       .order("created_at", { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return DEMO_MESSAGES[orderNumber] || [];
+      return [];
     }
 
     return data.map((msg: any) => ({
@@ -199,7 +193,7 @@ export async function getOrderMessages(
       created_at: msg.created_at,
     }));
   } catch {
-    return DEMO_MESSAGES[orderNumber] || [];
+    return [];
   }
 }
 
@@ -222,7 +216,7 @@ export async function getOrderFiles(
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return DEMO_FILES[orderNumber] || [];
+      return [];
     }
 
     return data.map((f: any) => ({
@@ -230,7 +224,7 @@ export async function getOrderFiles(
       uploader_name: f.uploader?.full_name || "Team",
     }));
   } catch {
-    return DEMO_FILES[orderNumber] || [];
+    return [];
   }
 }
 
@@ -254,7 +248,7 @@ export async function getOrderEvents(
       .order("created_at", { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return DEMO_EVENTS[orderNumber] || [];
+      return [];
     }
 
     return data.map((ev: any) => ({
@@ -262,6 +256,6 @@ export async function getOrderEvents(
       actor_name: ev.actor?.full_name,
     }));
   } catch {
-    return DEMO_EVENTS[orderNumber] || [];
+    return [];
   }
 }

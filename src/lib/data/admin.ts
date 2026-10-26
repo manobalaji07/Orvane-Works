@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_ORDERS, type Order } from "./orders";
+import type { Order } from "./orders";
 
 export interface EmployeeRequestItem {
   id: string;
@@ -63,17 +63,6 @@ export interface AuditLogItem {
   created_at: string;
 }
 
-// Fallback empty data structures
-export const DEMO_EMPLOYEE_REQUESTS: EmployeeRequestItem[] = [];
-
-export const DEMO_ADMIN_EMPLOYEES: EmployeeAdminItem[] = [];
-
-export const DEMO_CONTACT_MESSAGES: ContactMessageItem[] = [];
-
-export const DEMO_WAITLIST: WaitlistEntryItem[] = [];
-
-export const DEMO_AUDIT_LOGS: AuditLogItem[] = [];
-
 /**
  * Fetch employee requests pending founder review
  */
@@ -89,7 +78,7 @@ export async function getEmployeeRequests(): Promise<EmployeeRequestItem[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return DEMO_EMPLOYEE_REQUESTS;
+      return [];
     }
 
     return data.map((d: any) => ({
@@ -106,7 +95,7 @@ export async function getEmployeeRequests(): Promise<EmployeeRequestItem[]> {
       created_at: d.created_at,
     }));
   } catch {
-    return DEMO_EMPLOYEE_REQUESTS;
+    return [];
   }
 }
 
@@ -125,7 +114,7 @@ export async function getAllEmployeesAdmin(): Promise<EmployeeAdminItem[]> {
       .order("display_order", { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return DEMO_ADMIN_EMPLOYEES;
+      return [];
     }
 
     return data.map((d: any) => ({
@@ -142,7 +131,7 @@ export async function getAllEmployeesAdmin(): Promise<EmployeeAdminItem[]> {
       created_at: d.created_at,
     }));
   } catch {
-    return DEMO_ADMIN_EMPLOYEES;
+    return [];
   }
 }
 
@@ -164,7 +153,7 @@ export async function getAllOrdersAdmin(): Promise<Order[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return DEMO_ORDERS;
+      return [];
     }
 
     return data.map((row: any) => ({
@@ -176,7 +165,7 @@ export async function getAllOrdersAdmin(): Promise<Order[]> {
       client_email: row.client_profile?.email || "",
     }));
   } catch {
-    return DEMO_ORDERS;
+    return [];
   }
 }
 
@@ -213,18 +202,18 @@ export async function getAdminInbox(): Promise<{
             handled_at: c.handled_at,
             created_at: c.created_at,
           }))
-        : DEMO_CONTACT_MESSAGES;
+        : [];
 
     const waitlistEntries: WaitlistEntryItem[] =
       waitlistRes.data && waitlistRes.data.length > 0
         ? waitlistRes.data
-        : DEMO_WAITLIST;
+        : [];
 
     return { contactMessages, waitlistEntries };
   } catch {
     return {
-      contactMessages: DEMO_CONTACT_MESSAGES,
-      waitlistEntries: DEMO_WAITLIST,
+      contactMessages: [],
+      waitlistEntries: [],
     };
   }
 }
@@ -245,7 +234,7 @@ export async function getAuditLogs(): Promise<AuditLogItem[]> {
       .limit(50);
 
     if (error || !data || data.length === 0) {
-      return DEMO_AUDIT_LOGS;
+      return [];
     }
 
     return data.map((d: any) => ({
@@ -260,6 +249,6 @@ export async function getAuditLogs(): Promise<AuditLogItem[]> {
       created_at: d.created_at,
     }));
   } catch {
-    return DEMO_AUDIT_LOGS;
+    return [];
   }
 }

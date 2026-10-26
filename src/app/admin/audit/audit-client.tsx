@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Activity, Shield, Filter, Calendar, User, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,6 +23,8 @@ export function AuditClient({ initialLogs }: AuditClientProps) {
   const [logs, setLogs] = useState<AuditLogItem[]>(initialLogs);
   const [filterAction, setFilterAction] = useState<string>("ALL");
   const [search, setSearch] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 15;
 
   const actions = [
     "ALL",
@@ -42,6 +45,12 @@ export function AuditClient({ initialLogs }: AuditClientProps) {
         log.actor_name.toLowerCase().includes(search.toLowerCase()));
     return matchesAction && matchesSearch;
   });
+
+  const totalPages = Math.ceil(filteredLogs.length / pageSize) || 1;
+  const paginatedLogs = filteredLogs.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <div className="space-y-6">
@@ -98,7 +107,7 @@ export function AuditClient({ initialLogs }: AuditClientProps) {
                 No audit log entries match the selected filter.
               </div>
             ) : (
-              filteredLogs.map((log) => (
+              paginatedLogs.map((log) => (
                 <div
                   key={log.id}
                   className="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:bg-muted/10 transition-colors"
@@ -132,6 +141,34 @@ export function AuditClient({ initialLogs }: AuditClientProps) {
               ))
             )}
           </div>
+
+          {totalPages > 1 && (
+            <div className="p-3 bg-muted/20 border-t border-border flex items-center justify-between text-xs text-muted-foreground font-sans">
+              <span>
+                Page {currentPage} of {totalPages} ({filteredLogs.length} events)
+              </span>
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs font-sans"
+                  disabled={currentPage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs font-sans"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
