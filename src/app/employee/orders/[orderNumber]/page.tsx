@@ -182,7 +182,12 @@ export default async function EmployeeOrderDetailPage({
           <DeliverableUploader orderId={order.id} orderNumber={order.order_number} />
 
           {/* Files Vault */}
-          <FilesCard files={files} orderNumber={order.order_number} />
+          <FilesCard
+            files={files}
+            orderNumber={order.order_number}
+            orderId={order.id}
+            userRole="employee"
+          />
 
           {/* Message Thread */}
           <MessageThread

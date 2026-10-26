@@ -313,6 +313,22 @@ export function AdminOrderWorkbench({
                 <span>Quick: Advance to "Delivered"</span>
               </Button>
             )}
+
+            {status === "delivered" && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="text-xs h-7 gap-1 border-emerald-500/50 text-emerald-600 hover:bg-emerald-500/10 shrink-0 font-medium"
+                onClick={() => {
+                  setStatus("closed");
+                  setPaymentStatus("paid_in_full");
+                }}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Quick: Finalize &amp; Close Project</span>
+              </Button>
+            )}
           </div>
 
           <div className="flex justify-end pt-1">

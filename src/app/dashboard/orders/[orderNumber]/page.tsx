@@ -27,6 +27,7 @@ import { QuoteCard } from "@/components/orders/quote-card";
 import { MessageThread } from "@/components/orders/message-thread";
 import { FilesCard } from "@/components/orders/files-card";
 import { ReviewModal } from "@/components/orders/review-modal";
+import { ClientCloseProjectButton } from "@/components/orders/client-close-project-button";
 import { ClientPaymentCard } from "@/components/payments/client-payment-card";
 import {
   getOrderByNumber,
@@ -98,6 +99,10 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
         </div>
 
         <div className="flex items-center gap-2">
+          {order.status === "delivered" && (
+            <ClientCloseProjectButton orderNumber={order.order_number} />
+          )}
+
           {canReview && (
             <ReviewModal orderId={order.id} orderNumber={order.order_number} />
           )}
@@ -193,7 +198,12 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           </Card>
 
           {/* Deliverables & Assets Vault */}
-          <FilesCard files={files} orderNumber={order.order_number} />
+          <FilesCard
+            files={files}
+            orderNumber={order.order_number}
+            orderId={order.id}
+            userRole="client"
+          />
 
           {/* Project Collaboration Message Thread */}
           <MessageThread

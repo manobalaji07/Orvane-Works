@@ -16,6 +16,7 @@ import {
   sendNewMessageNotificationEmail,
 } from "@/lib/email";
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { logAuditEvent } from "./auth";
 
 export type OrderActionResult = {
   success: boolean;
@@ -299,6 +300,52 @@ export async function acceptQuoteAction(orderNumber: string): Promise<OrderActio
   revalidatePath(`/dashboard/orders/${orderNumber}`);
   revalidatePath("/dashboard");
   return { success: true, message: "Quote accepted." };
+}
+
+/**
+ * Client approves deliverables and completes/closes the project
+ */
+export async function closeOrderClientAction(orderNumber: string): Promise<OrderActionResult> {
+  const { user, profile } = await requireClient();
+  const supabase = createAdminClient();
+
+  try {
+    const { data: order, error: fetchErr } = await supabase
+      .from("orders")
+      .select("id, client_id, status")
+      .eq("order_number", orderNumber)
+      .single();
+
+    if (fetchErr || !order || (order.client_id !== user.id && profile.role !== "admin")) {
+      return { success: false, message: "Order not found or unauthorized." };
+    }
+
+    await supabase
+      .from("orders")
+      .update({
+        status: "closed",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", order.id);
+
+    await supabase.from("order_events").insert({
+      order_id: order.id,
+      actor_id: user.id,
+      event_type: "ORDER_CLOSED",
+      previous_value: order.status,
+      new_value: "closed",
+      notes: "Project deliverables approved and signed off by client.",
+    });
+
+    revalidatePath(`/dashboard/orders/${orderNumber}`);
+    revalidatePath(`/admin/orders/${orderNumber}`);
+    revalidatePath("/dashboard");
+    revalidatePath("/admin/orders");
+
+    return { success: true, message: "Project officially closed and signed off. Thank you!" };
+  } catch (err: any) {
+    return { success: false, message: err?.message || "Failed to close project." };
+  }
 }
 
 /**
