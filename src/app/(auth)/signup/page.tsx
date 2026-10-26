@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { signUpClientAction } from "@/app/actions/auth";
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { Turnstile } from "@/components/ui/turnstile";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function SignupPage() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [turnstileToken, setTurnstileToken] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
@@ -38,6 +40,7 @@ export default function SignupPage() {
         email,
         password,
         phone,
+        turnstileToken,
       });
 
       if (!res.success) {
@@ -165,6 +168,8 @@ export default function SignupPage() {
                 <Lock className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5" />
               </div>
             </div>
+
+            <Turnstile onVerify={setTurnstileToken} />
 
             <Button
               type="submit"

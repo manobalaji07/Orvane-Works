@@ -6,6 +6,9 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { validateEnvironment } from "@/lib/env";
+
+validateEnvironment();
 
 const siteBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://example.com";
 

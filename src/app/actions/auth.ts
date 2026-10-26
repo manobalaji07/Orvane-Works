@@ -13,6 +13,8 @@ import {
 import { getPostLoginRedirect, type UserRole, type UserStatus } from "@/lib/auth/roles";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { verifyTurnstileToken } from "@/lib/security/turnstile";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 export interface ActionResult<T = unknown> {
   success: boolean;
@@ -57,7 +59,26 @@ export async function signInAction(input: LoginInput): Promise<ActionResult> {
     };
   }
 
-  const { email, password } = parsed.data;
+  const { email, password, turnstileToken } = parsed.data;
+
+  // 1. Rate Limiting Check (5 attempts / min)
+  const allowed = await checkRateLimit(`login:${email.toLowerCase()}`, 5, 60);
+  if (!allowed) {
+    return {
+      success: false,
+      error: "Too many sign-in attempts. Please try again in 1 minute.",
+    };
+  }
+
+  // 2. Cloudflare Turnstile bot verification
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return {
+      success: false,
+      error: "Bot challenge verification failed. Please try again.",
+    };
+  }
+
   const supabase = createClient();
 
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
@@ -118,7 +139,26 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
     };
   }
 
-  const { email, password, fullName, phone } = parsed.data;
+  const { email, password, fullName, phone, turnstileToken } = parsed.data;
+
+  // Rate Limiting Check (3 signups / min)
+  const allowed = await checkRateLimit(`signup:${email.toLowerCase()}`, 3, 60);
+  if (!allowed) {
+    return {
+      success: false,
+      error: "Too many sign-up attempts. Please wait a minute and try again.",
+    };
+  }
+
+  // Cloudflare Turnstile bot verification
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return {
+      success: false,
+      error: "Bot challenge verification failed. Please try again.",
+    };
+  }
+
   const supabase = createClient();
 
   // Explicitly assign requested_role as 'client'
@@ -169,8 +209,27 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
     };
   }
 
-  const { email, password, fullName, phone, portfolioUrl, resumeUrl, skills, coverNote } =
+  const { email, password, fullName, phone, portfolioUrl, resumeUrl, skills, coverNote, turnstileToken } =
     parsed.data;
+
+  // Rate Limiting Check (3 applications / min)
+  const allowed = await checkRateLimit(`join:${email.toLowerCase()}`, 3, 60);
+  if (!allowed) {
+    return {
+      success: false,
+      error: "Too many application attempts. Please wait a minute and try again.",
+    };
+  }
+
+  // Cloudflare Turnstile bot verification
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return {
+      success: false,
+      error: "Bot challenge verification failed. Please try again.",
+    };
+  }
+
   const supabase = createClient();
 
   // Create auth account with least-privilege 'pending_employee' intent

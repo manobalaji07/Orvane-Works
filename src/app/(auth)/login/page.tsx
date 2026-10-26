@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { signInAction } from "@/app/actions/auth";
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { Turnstile } from "@/components/ui/turnstile";
 
 function LoginForm() {
   const router = useRouter();
@@ -25,6 +26,7 @@ function LoginForm() {
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [turnstileToken, setTurnstileToken] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
@@ -42,7 +44,7 @@ function LoginForm() {
     setErrorMessage(null);
 
     try {
-      const res = await signInAction({ email, password });
+      const res = await signInAction({ email, password, turnstileToken });
       if (!res.success) {
         setErrorMessage(res.error || "Unable to sign in. Please verify your email and password.");
         setIsLoading(false);
@@ -131,6 +133,8 @@ function LoginForm() {
               <Lock className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3.5" />
             </div>
           </div>
+
+          <Turnstile onVerify={setTurnstileToken} />
 
           <Button
             type="submit"

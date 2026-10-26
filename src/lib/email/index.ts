@@ -446,3 +446,99 @@ export async function sendNewMessageNotificationEmail({
     html,
   });
 }
+
+/**
+ * 7. Branded Account Email Confirmation
+ */
+export async function sendAccountConfirmationEmail({
+  name,
+  email,
+  confirmationUrl,
+}: {
+  name: string;
+  email: string;
+  confirmationUrl: string;
+}) {
+  const html = wrapEmailHtml(
+    `Confirm Your Account — ${SITE_CONFIG.name}`,
+    `
+    <div class="badge">Welcome to ${SITE_CONFIG.name}</div>
+    <h2 class="heading">Vanakkam ${name}! Confirm your email address.</h2>
+    <p>Thank you for creating an account with ${SITE_CONFIG.name}. Please confirm your email address by clicking the button below:</p>
+    <a href="${confirmationUrl}" class="btn">Confirm Email Address</a>
+    <p style="margin-top: 24px; font-size: 13px; color: #6B7280;">
+      If you did not create an account, you can safely ignore this email. Link expires in 24 hours.
+    </p>
+    `
+  );
+
+  return sendEmail({
+    to: email,
+    subject: `Confirm your ${SITE_CONFIG.name} account`,
+    html,
+  });
+}
+
+/**
+ * 8. Branded Password Reset Email
+ */
+export async function sendPasswordResetEmail({
+  name,
+  email,
+  resetUrl,
+}: {
+  name?: string;
+  email: string;
+  resetUrl: string;
+}) {
+  const html = wrapEmailHtml(
+    `Reset Your Password — ${SITE_CONFIG.name}`,
+    `
+    <div class="badge">Security Notification</div>
+    <h2 class="heading">Password Reset Request</h2>
+    <p>Hi ${name || "there"}, we received a request to reset your password for your ${SITE_CONFIG.name} account.</p>
+    <a href="${resetUrl}" class="btn">Set New Password</a>
+    <p style="margin-top: 24px; font-size: 13px; color: #6B7280;">
+      If you did not request a password reset, please secure your account immediately or notify ${SITE_CONFIG.email}.
+    </p>
+    `
+  );
+
+  return sendEmail({
+    to: email,
+    subject: `Reset your ${SITE_CONFIG.name} password`,
+    html,
+  });
+}
+
+/**
+ * 9. Branded Specialist / Team Invite Email
+ */
+export async function sendSpecialistInviteEmail({
+  name,
+  email,
+  inviteUrl,
+}: {
+  name: string;
+  email: string;
+  inviteUrl: string;
+}) {
+  const html = wrapEmailHtml(
+    `Invitation to Join ${SITE_CONFIG.name}`,
+    `
+    <div class="badge">Team Invitation</div>
+    <h2 class="heading">You're invited to join ${SITE_CONFIG.name} as a Specialist</h2>
+    <p>Vanakkam ${name}, our founder team has approved and invited you to join the ${SITE_CONFIG.name} engineering & creative collective in Madurai.</p>
+    <a href="${inviteUrl}" class="btn">Accept Invitation & Setup Account</a>
+    <p style="margin-top: 24px; font-size: 13px; color: #6B7280;">
+      Questions? Reach out to our lead team at ${SITE_CONFIG.email}.
+    </p>
+    `
+  );
+
+  return sendEmail({
+    to: email,
+    subject: `Invitation to join ${SITE_CONFIG.name} as a Specialist`,
+    html,
+  });
+}

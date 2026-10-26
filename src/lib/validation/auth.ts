@@ -3,6 +3,7 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z.string().email("Please provide a valid email address."),
   password: z.string().min(8, "Password must be at least 8 characters."),
+  turnstileToken: z.string().optional(),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -20,6 +21,7 @@ export const clientSignupSchema = z.object({
     .regex(/^[+0-9\s-]{10,15}$/, "Please enter a valid phone number (10-15 digits).")
     .optional()
     .or(z.literal("")),
+  turnstileToken: z.string().optional(),
 });
 
 export type ClientSignupInput = z.infer<typeof clientSignupSchema>;
@@ -48,6 +50,7 @@ export const joinTeamSchema = z.object({
   skills: z
     .array(z.string())
     .min(1, "Please select or list at least one engineering or creative skill."),
+  turnstileToken: z.string().optional(),
   coverNote: z
     .string()
     .min(30, "Please tell us briefly about your engineering background and why you want to join Orvane Works (at least 30 characters)."),
