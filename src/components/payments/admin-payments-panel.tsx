@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useActionState, useState } from "react";
+import React, { useState, useTransition } from "react";
+import { useFormState } from "react-dom";
 import {
   CreditCard,
   Plus,
   Ban,
+  Pencil,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -22,7 +24,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { recordPaymentAction, voidPaymentAction } from "@/app/actions/payments";
+import { recordPaymentAction, voidPaymentAction, editPaymentAction } from "@/app/actions/payments";
 import type { OrderPayment, PaymentSummary } from "@/lib/data/payments";
 import { formatINR } from "@/lib/utils";
 
@@ -62,7 +64,8 @@ interface RecordFormProps {
 }
 
 function RecordPaymentForm({ orderId, orderNumber, onSuccess }: RecordFormProps) {
-  const [state, formAction, isPending] = useActionState(recordPaymentAction, null);
+  const [state, formAction] = useFormState(recordPaymentAction, null);
+  const [isPending, startTransition] = useTransition();
 
   React.useEffect(() => {
     if (state?.success) onSuccess();
@@ -71,7 +74,10 @@ function RecordPaymentForm({ orderId, orderNumber, onSuccess }: RecordFormProps)
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form
+      action={(formData) => startTransition(() => formAction(formData))}
+      className="space-y-4"
+    >
       <input type="hidden" name="order_id" value={orderId} />
       <input type="hidden" name="order_number" value={orderNumber} />
 
@@ -212,7 +218,8 @@ interface VoidRowProps {
 
 function VoidPaymentRow({ payment, orderNumber }: VoidRowProps) {
   const [open, setOpen] = useState(false);
-  const [state, formAction, isPending] = useActionState(voidPaymentAction, null);
+  const [state, formAction] = useFormState(voidPaymentAction, null);
+  const [isPending, startTransition] = useTransition();
 
   React.useEffect(() => {
     if (state?.success) setOpen(false);
@@ -231,7 +238,10 @@ function VoidPaymentRow({ payment, orderNumber }: VoidRowProps) {
   }
 
   return (
-    <form action={formAction} className="mt-2 space-y-2 p-3 bg-destructive/5 rounded-md border border-destructive/20">
+    <form
+      action={(formData) => startTransition(() => formAction(formData))}
+      className="mt-2 space-y-2 p-3 bg-destructive/5 rounded-md border border-destructive/20"
+    >
       <input type="hidden" name="payment_id" value={payment.id} />
       <input type="hidden" name="order_number" value={orderNumber} />
       <p className="text-[11px] font-semibold text-destructive">Void this payment?</p>
@@ -255,6 +265,144 @@ function VoidPaymentRow({ payment, orderNumber }: VoidRowProps) {
           variant="ghost"
           size="sm"
           className="text-xs"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+// ── Sub-component: Edit Payment Inline ────────────────────────────────────────
+
+interface EditRowProps {
+  payment: OrderPayment;
+  orderNumber: string;
+}
+
+function EditPaymentRow({ payment, orderNumber }: EditRowProps) {
+  const [open, setOpen] = useState(false);
+  const [state, formAction] = useFormState(editPaymentAction, null);
+  const [isPending, startTransition] = useTransition();
+
+  React.useEffect(() => {
+    if (state?.success) setOpen(false);
+  }, [state?.success]);
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-[11px] text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors flex items-center gap-1"
+      >
+        <Pencil className="w-3 h-3" />
+        Edit
+      </button>
+    );
+  }
+
+  return (
+    <form
+      action={(formData) => startTransition(() => formAction(formData))}
+      className="mt-2 space-y-3 p-3 bg-muted/20 rounded-md border border-border"
+    >
+      <input type="hidden" name="payment_id" value={payment.id} />
+      <input type="hidden" name="order_id" value={payment.order_id} />
+      <input type="hidden" name="order_number" value={orderNumber} />
+
+      <p className="text-[11px] font-semibold text-foreground">Edit Payment Details</p>
+
+      {state && !state.success && (
+        <div className="p-2 rounded bg-destructive/10 border border-destructive/20 text-destructive text-xs">
+          {state.message || state.error}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div>
+          <label className="text-[10px] font-medium text-muted-foreground block mb-1">Amount (₹)</label>
+          <Input
+            type="number"
+            name="amount_inr"
+            defaultValue={payment.amount_inr}
+            min="1"
+            step="0.01"
+            required
+            className="text-xs h-8"
+          />
+        </div>
+        <div>
+          <label className="text-[10px] font-medium text-muted-foreground block mb-1">Date Received</label>
+          <Input
+            type="date"
+            name="date_received"
+            defaultValue={payment.date_received}
+            required
+            className="text-xs h-8"
+          />
+        </div>
+        <div>
+          <label className="text-[10px] font-medium text-muted-foreground block mb-1">Payment Type</label>
+          <select
+            name="payment_type"
+            defaultValue={payment.payment_type}
+            required
+            className="w-full h-8 px-2 rounded-md border border-input bg-background text-xs"
+          >
+            <option value="advance">Advance</option>
+            <option value="balance">Balance</option>
+            <option value="full">Full Payment</option>
+          </select>
+        </div>
+        <div>
+          <label className="text-[10px] font-medium text-muted-foreground block mb-1">Method</label>
+          <select
+            name="method"
+            defaultValue={payment.method}
+            required
+            className="w-full h-8 px-2 rounded-md border border-input bg-background text-xs"
+          >
+            <option value="upi">UPI</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="cash">Cash</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="text-[10px] font-medium text-muted-foreground block mb-1">UTR / Transaction Ref</label>
+        <Input
+          type="text"
+          name="reference_utr"
+          defaultValue={payment.reference_utr || ""}
+          placeholder="e.g. UPI Ref ID"
+          className="text-xs font-mono h-8"
+        />
+      </div>
+
+      <div>
+        <label className="text-[10px] font-medium text-muted-foreground block mb-1">Internal Notes</label>
+        <Textarea
+          name="notes"
+          defaultValue={payment.notes || ""}
+          rows={2}
+          className="text-xs resize-none"
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={isPending} className="text-xs h-8 gap-1">
+          {isPending && <Loader2 className="w-3 h-3 animate-spin" />}
+          Save Changes
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="text-xs h-8"
           onClick={() => setOpen(false)}
         >
           Cancel
@@ -352,11 +500,14 @@ export function AdminPaymentsPanel({
                     </Badge>
                     <span className="text-muted-foreground">{METHOD_LABELS[p.method] || p.method}</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     {p.voided_at ? (
                       <Badge variant="destructive" className="text-[10px] py-0">Voided</Badge>
                     ) : (
-                      <VoidPaymentRow payment={p} orderNumber={orderNumber} />
+                      <>
+                        <EditPaymentRow payment={p} orderNumber={orderNumber} />
+                        <VoidPaymentRow payment={p} orderNumber={orderNumber} />
+                      </>
                     )}
                   </div>
                 </div>

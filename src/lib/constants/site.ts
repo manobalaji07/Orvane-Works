@@ -8,15 +8,15 @@ export const SITE_CONFIG = {
   region: "Tamil Nadu",
   country: "India",
   address: "Madurai, Tamil Nadu 625020, India",
-  email: "hello@orvane.studio", // Clearly labelled contact placeholder
-  phone: "+91 98765 43210",    // Clearly labelled contact placeholder
-  whatsappNumber: "919876543210", // Prefilled link target
+  email: "hello@example.com",
+  phone: "+91 98765 43210",
+  whatsappNumber: "919876543210",
   whatsappDefaultMessage: "Hi Orvane Works! I'd like to discuss a project for my business.",
   socials: {
-    instagram: "https://instagram.com/orvane.studio",
-    linkedin: "https://linkedin.com/company/orvane-studio",
-    youtube: "https://youtube.com/@orvanestudio",
-    github: "https://github.com/orvane-studio",
+    instagram: "",
+    linkedin: "",
+    youtube: "",
+    github: "",
   },
   links: {
     home: "/",

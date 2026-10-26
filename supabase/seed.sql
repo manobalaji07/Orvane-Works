@@ -1,5 +1,5 @@
 -- Orvane Works Database Seed Script
--- Realistic demo data clearly labelled as demo
+-- Realistic foundational data for development and testing
 
 -- Seed Services
 insert into public.services (id, slug, title, short_description, full_description, icon_name, is_active, display_order)
@@ -42,7 +42,7 @@ values
   (
     '10000000-0000-0000-0000-000000000001',
     '00000000-0000-0000-0000-000000000001',
-    'Starter Studio Website [Demo]',
+    'Starter Studio Website',
     'starter-website',
     24999.00,
     7,
@@ -54,7 +54,7 @@ values
   (
     '10000000-0000-0000-0000-000000000002',
     '00000000-0000-0000-0000-000000000001',
-    'Growth Web Platform [Demo]',
+    'Growth Web Platform',
     'growth-platform',
     49999.00,
     14,
@@ -66,7 +66,7 @@ values
   (
     '10000000-0000-0000-0000-000000000003',
     '00000000-0000-0000-0000-000000000002',
-    'Reels Creator Sprint [Demo]',
+    'Reels Creator Sprint',
     'reels-sprint',
     14999.00,
     5,
@@ -78,7 +78,7 @@ values
   (
     '10000000-0000-0000-0000-000000000004',
     '00000000-0000-0000-0000-000000000003',
-    'Brand Identity Essentials [Demo]',
+    'Brand Identity Essentials',
     'brand-identity-essentials',
     18999.00,
     10,
@@ -115,7 +115,7 @@ values
     '30000000-0000-0000-0000-000000000002',
     'Workflow',
     'How do quotes and billing work?',
-    'All quotes are provided transparently in Indian Rupees (₹). Once we review your brief, we issue an itemized estimate with deliverables and milestones. Version 1 uses manual bank transfer / UPI tracking recorded in your client dashboard, with Razorpay integration scheduled.',
+    'All quotes are provided transparently in Indian Rupees (₹). Once we review your brief, we issue an itemized estimate with deliverables and milestones. Payments are handled via direct bank transfer or UPI and tracked manually in your client dashboard.',
     2,
     true
   ),

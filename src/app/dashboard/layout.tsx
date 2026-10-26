@@ -18,13 +18,13 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let profile = { full_name: "Valued Client", email: "client@orvane.studio" };
+  let profile = { full_name: "Client", email: "" };
 
   try {
     const res = await requireClient();
     if (res.profile) {
       profile = {
-        full_name: res.profile.full_name || "Valued Client",
+        full_name: res.profile.full_name || "Client",
         email: res.profile.email,
       };
     }

@@ -10,9 +10,9 @@
 Orvane Works is an engineering-first freelance digital studio founded and operated by engineering students in Madurai, Tamil Nadu. We specialize in high-conversion web development (Next.js, Supabase), paced short-form video editing & reels, strategic brand design assets, and student hardware/IoT prototyping.
 
 ### Core Editorial & Studio Standards
-1. **Never Invent Facts**: Never fabricate client names, awards, pricing, or past project metrics. All placeholder or demo records must be explicitly marked with the `[Demo]` tag.
+1. **Never Invent Facts**: Never fabricate client names, awards, pricing, or past project metrics. Use clearly labelled placeholders when drafting unpublished content.
 2. **Transparent Indian Rupee Pricing**: All client-facing currency is strictly formatted in Indian Rupees using the standard symbol (`₹`) and Lakh/Crore numbering conventions (`formatINR`).
-3. **Database-Driven Content**: Every public service, package, portfolio item, team member profile, and testimonial is dynamically queried from Supabase PostgreSQL. Changes made in the Admin Governance Deck immediately reflect across the public website via Next.js on-demand ISR.
+3. **Database-Driven Content**: Every public service, package, portfolio item, team member profile, and testimonial is dynamically queried from Supabase PostgreSQL. Sections with no content automatically hide until real content is added. Changes made in the Admin Governance Deck immediately reflect across the public website via Next.js on-demand ISR.
 4. **Privacy & DPDP Act 2023 Compliance**: Client inquiries and order briefs are confidential. Private deliverable files are secured in restricted Supabase storage buckets and accessible only via time-limited signed URLs.
 
 ---
@@ -65,7 +65,7 @@ Orvane has **zero hardcoded service offerings**. The public navigation, `/servic
 ### Defining Service Packages
 1. Select the parent service.
 2. Click **Add Package** and enter:
-   - **Package Name**: E.g., `Starter Studio Website [Demo]`, `Reels Creator Sprint [Demo]`.
+   - **Package Name**: E.g., `Starter Studio Website`, `Reels Creator Sprint`.
    - **Slug**: Hyphenated URL slug.
    - **Price (INR)**: Baseline starting price in Indian Rupees (e.g., `24999.00`).
    - **Delivery Time (Days)**: Turnaround SLA in calendar days (e.g., `7`, `14`).
@@ -86,12 +86,12 @@ Orvane has **zero hardcoded service offerings**. The public navigation, `/servic
 
 ## 5. Portfolio Case Studies & Client Showcase
 
-Showcase real projects and clearly labelled demo sprints at `/portfolio`.
+Showcase real projects at `/portfolio`. Sections are automatically hidden if no projects exist.
 
 ### Creating a Case Study
-- **Title**: Project name (e.g., `Madurai Artisan Roasters E-Commerce [Demo]`).
+- **Title**: Project name (e.g., `Artisan Coffee E-Commerce Platform`).
 - **Slug**: URL slug for `/portfolio/[slug]`.
-- **Client Name**: Business name or `Demo Brand`.
+- **Client Name**: Business name or client organization.
 - **Category**: `Web Development`, `Video Editing`, `Branding`, or `Hardware / IoT`.
 - **Description**: Summary of the client's problem, engineering strategy, and final outcome.
 - **Key Metrics**: Quantifiable results (e.g., `["+180% Reel Engagement", "0.8s LCP on Mobile", "₹2.4L Month-1 GMV"]`).

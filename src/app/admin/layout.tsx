@@ -20,13 +20,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let profile = { full_name: "Founder Admin", email: "admin@orvane.studio" };
+  let profile = { full_name: "Administrator", email: "" };
 
   try {
     const res = await requireAdmin();
     if (res.profile) {
       profile = {
-        full_name: res.profile.full_name || "Founder Admin",
+        full_name: res.profile.full_name || "Administrator",
         email: res.profile.email,
       };
     }

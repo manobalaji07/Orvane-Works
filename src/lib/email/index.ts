@@ -3,7 +3,7 @@ import { SITE_CONFIG } from "@/lib/constants/site";
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || `${SITE_CONFIG.name} <notifications@orvane.studio>`;
+const FROM_EMAIL = process.env.EMAIL_FROM || process.env.RESEND_FROM_EMAIL || `${SITE_CONFIG.name} <notifications@example.com>`;
 const COMPANY_INBOX = process.env.COMPANY_INBOX || SITE_CONFIG.email;
 
 /**

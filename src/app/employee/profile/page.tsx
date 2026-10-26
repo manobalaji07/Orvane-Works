@@ -52,54 +52,20 @@ export default function EmployeeProfileEditorPage() {
   const [activeTab, setActiveTab] = React.useState<"editor" | "preview">("editor");
 
   // Form State
-  const [name, setName] = React.useState("Karthik Rajan");
-  const [avatarUrl, setAvatarUrl] = React.useState(
-    "/team/karthik-rajan.jpg"
-  );
-  const [designation, setDesignation] = React.useState(
-    "Lead Full-Stack Engineer & Founder"
-  );
-  const [bio, setBio] = React.useState(
-    "Final-year Computer Science engineering student in Madurai. Specializing in Next.js App Router architectures, PostgreSQL RLS security models, and high-performance Web APIs."
-  );
+  const [name, setName] = React.useState("");
+  const [avatarUrl, setAvatarUrl] = React.useState("");
+  const [designation, setDesignation] = React.useState("");
+  const [bio, setBio] = React.useState("");
   const [availabilityStatus, setAvailabilityStatus] = React.useState<
     "available" | "busy" | "unavailable"
   >("available");
-  const [specializations, setSpecializations] = React.useState<string[]>([
-    "Next.js & React",
-    "TypeScript",
-    "PostgreSQL & RLS",
-    "System Design",
-  ]);
-  const [githubUrl, setGithubUrl] = React.useState("https://github.com/karthik-orvane");
-  const [linkedinUrl, setLinkedinUrl] = React.useState("https://linkedin.com/in/karthik-rajan-demo");
-  const [websiteUrl, setWebsiteUrl] = React.useState("https://karthik.dev");
+  const [specializations, setSpecializations] = React.useState<string[]>([]);
+  const [githubUrl, setGithubUrl] = React.useState("");
+  const [linkedinUrl, setLinkedinUrl] = React.useState("");
+  const [websiteUrl, setWebsiteUrl] = React.useState("");
 
   // Experience Entries
-  const [experience, setExperience] = React.useState<ExperienceEntry[]>([
-    {
-      id: "exp-1",
-      role: "Lead Full-Stack Engineer",
-      organization: SITE_CONFIG.name,
-      start_date: "2024-01-01",
-      end_date: null,
-      is_current: true,
-      description:
-        "Architected production web platforms for local businesses in Tamil Nadu with strict WCAG 2.2 AA accessibility and 90+ mobile Lighthouse scores.",
-      display_order: 1,
-    },
-    {
-      id: "exp-2",
-      role: "Web Engineering Intern",
-      organization: "Madurai Tech Labs [Demo]",
-      start_date: "2023-06-01",
-      end_date: "2023-12-01",
-      is_current: false,
-      description:
-        "Built internal REST API microservices and automated database migration pipelines using Node.js and PostgreSQL.",
-      display_order: 2,
-    },
-  ]);
+  const [experience, setExperience] = React.useState<ExperienceEntry[]>([]);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
@@ -305,7 +271,7 @@ export default function EmployeeProfileEditorPage() {
                 </label>
                 <Input
                   type="text"
-                  placeholder="e.g. /team/karthik-rajan.jpg or https://...photo.jpg"
+                  placeholder="e.g. https://.../photo.jpg"
                   value={avatarUrl}
                   onChange={(e) => setAvatarUrl(e.target.value)}
                 />

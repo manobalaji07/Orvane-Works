@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Orvane Studio: Bootstrap First Administrator
+-- Orvane Works: Bootstrap First Administrator
 -- ==============================================================================
 -- This script promotes a registered user to the 'admin' role.
 -- Due to trigger 'on_profile_role_update' requiring is_admin(), bootstrapping
@@ -7,15 +7,15 @@
 -- or via the service role key.
 --
 -- Instructions:
--- 1. Sign up on Orvane (e.g. at http://localhost:3000/login or production URL)
+-- 1. Sign up on Orvane Works (e.g. at http://localhost:3000/login or production URL)
 --    with your admin email address.
--- 2. In Supabase Dashboard -> SQL Editor, replace 'admin@orvane.studio' below
+-- 2. In Supabase Dashboard -> SQL Editor, replace 'admin@example.com' below
 --    with your registered email address and execute this query.
 -- ==============================================================================
 
 do $$
 declare
-  target_email text := 'admin@orvane.studio'; -- <-- CHANGE THIS TO YOUR REGISTERED EMAIL
+  target_email text := 'admin@example.com'; -- <-- CHANGE THIS TO YOUR REGISTERED EMAIL
   v_user_id uuid;
 begin
   -- Find the user profile by email

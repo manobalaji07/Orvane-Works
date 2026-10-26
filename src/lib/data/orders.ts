@@ -86,208 +86,14 @@ export interface OrderEvent {
   created_at: string;
 }
 
-// Fallback demo data clearly labelled for preview & testing
-export const DEMO_ORDERS: Order[] = [
-  {
-    id: "d0000001-0000-0000-0000-000000000001",
-    order_number: "ORV-2026-0001",
-    client_id: "client-demo-id",
-    client_name: "Karthik Raja",
-    client_email: "karthik@maduraitea.example",
-    service_id: "00000000-0000-0000-0000-000000000001",
-    service_title: "Web Design & Development",
-    package_id: "p0000001-0000-0000-0000-000000000001",
-    package_name: "Starter Brand Website",
-    preferred_employee_id: "00000000-0000-0000-0000-000000000101",
-    preferred_employee_name: "Priya Sundaram",
-    title: "Starter Brand Website [Demo]",
-    project_brief:
-      "We need a responsive 5-page digital presence for our heritage tea shop near Meenakshi Amman Temple. Must include a digital menu, WhatsApp ordering button, and local Madurai SEO schema.",
-    budget_min_inr: 20000,
-    budget_max_inr: 30000,
-    target_deadline: "2026-11-15",
-    preferred_contact_method: "whatsapp",
-    status: "in_progress",
-    quote_amount_inr: 24999,
-    quote_terms: "50% advance upon project acceptance, 50% on final production deployment. Includes 30 days of post-launch maintenance.",
-    payment_status: "partially_paid",
-    reference_links: "https://instagram.com/maduraiteatales\nhttps://bluebottlecoffee.com",
-    created_at: "2026-10-18T10:30:00Z",
-    updated_at: "2026-10-22T14:15:00Z",
-  },
-  {
-    id: "d0000002-0000-0000-0000-000000000002",
-    order_number: "ORV-2026-0002",
-    client_id: "client-demo-id",
-    client_name: "Karthik Raja",
-    client_email: "karthik@maduraitea.example",
-    service_id: "00000000-0000-0000-0000-000000000002",
-    service_title: "Video Editing & Reels",
-    package_id: "p0000001-0000-0000-0000-000000000003",
-    package_name: "Reels Starter Pack (5 Reels)",
-    preferred_employee_id: "00000000-0000-0000-0000-000000000102",
-    preferred_employee_name: "Arun Kumar",
-    title: "Diwali Festive Reels Campaign [Demo]",
-    project_brief:
-      "5 cinematic 9:16 reels showcasing the brewing tradition and behind-the-scenes packaging of our Diwali gift hampers. Captions in Tamil & English.",
-    budget_min_inr: 8000,
-    budget_max_inr: 12000,
-    target_deadline: "2026-10-20",
-    preferred_contact_method: "email",
-    status: "delivered",
-    quote_amount_inr: 9999,
-    quote_terms: "100% billed upon master delivery. High-res ProRes 422 files included.",
-    payment_status: "paid_in_full",
-    created_at: "2026-10-05T09:00:00Z",
-    updated_at: "2026-10-20T17:00:00Z",
-  },
-];
+// Fallback empty data structures
+export const DEMO_ORDERS: Order[] = [];
 
-export const DEMO_MESSAGES: Record<string, OrderMessage[]> = {
-  "ORV-2026-0001": [
-    {
-      id: "m1",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      sender_id: "client-demo-id",
-      sender_name: "Karthik Raja",
-      sender_role: "client",
-      content: "Vanakkam team! We uploaded the raw photographs and high-res logo vector to the reference files section.",
-      created_at: "2026-10-18T11:00:00Z",
-    },
-    {
-      id: "m2",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      sender_id: "00000000-0000-0000-0000-000000000101",
-      sender_name: "Priya Sundaram",
-      sender_role: "employee",
-      content: "Received! The logo marks are crisp. We are completing the responsive wireframes on Figma right now and will upload the design preview link tomorrow.",
-      created_at: "2026-10-18T14:20:00Z",
-    },
-    {
-      id: "m3",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      sender_id: "00000000-0000-0000-0000-000000000101",
-      sender_name: "Priya Sundaram",
-      sender_role: "employee",
-      content: "Wireframes and mobile layout have been approved. We have moved the order into 'In Progress' and started coding the Next.js frontend.",
-      created_at: "2026-10-22T10:15:00Z",
-    },
-  ],
-  "ORV-2026-0002": [
-    {
-      id: "m2-1",
-      order_id: "d0000002-0000-0000-0000-000000000002",
-      sender_id: "00000000-0000-0000-0000-000000000102",
-      sender_name: "Arun Kumar",
-      sender_role: "employee",
-      content: "All 5 reels have been finalized with color grade, sound design, and animated typography. Deliverables are available in the files tab!",
-      created_at: "2026-10-20T16:50:00Z",
-    },
-  ],
-};
+export const DEMO_MESSAGES: Record<string, OrderMessage[]> = {};
 
-export const DEMO_FILES: Record<string, OrderFile[]> = {
-  "ORV-2026-0001": [
-    {
-      id: "f1",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      uploader_id: "client-demo-id",
-      uploader_name: "Karthik Raja",
-      file_name: "madurai-tea-brand-assets.zip",
-      file_size: 14200000,
-      mime_type: "application/zip",
-      storage_path: "orders/ORV-2026-0001/references/madurai-tea-brand-assets.zip",
-      file_category: "client_reference",
-      is_deliverable: false,
-      created_at: "2026-10-18T10:45:00Z",
-    },
-    {
-      id: "f2",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      uploader_id: "00000000-0000-0000-0000-000000000101",
-      uploader_name: "Priya Sundaram",
-      file_name: "wireframe-prototype-v1.pdf",
-      file_size: 4500000,
-      mime_type: "application/pdf",
-      storage_path: "orders/ORV-2026-0001/deliverables/wireframe-prototype-v1.pdf",
-      file_category: "deliverable",
-      is_deliverable: true,
-      created_at: "2026-10-20T15:30:00Z",
-    },
-  ],
-  "ORV-2026-0002": [
-    {
-      id: "f2-1",
-      order_id: "d0000002-0000-0000-0000-000000000002",
-      uploader_id: "00000000-0000-0000-0000-000000000102",
-      uploader_name: "Arun Kumar",
-      file_name: "diwali-reels-masters-prores.zip",
-      file_size: 89000000,
-      mime_type: "application/zip",
-      storage_path: "orders/ORV-2026-0002/deliverables/diwali-reels-masters-prores.zip",
-      file_category: "deliverable",
-      is_deliverable: true,
-      created_at: "2026-10-20T16:45:00Z",
-    },
-  ],
-};
+export const DEMO_FILES: Record<string, OrderFile[]> = {};
 
-export const DEMO_EVENTS: Record<string, OrderEvent[]> = {
-  "ORV-2026-0001": [
-    {
-      id: "e1",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      event_type: "STATUS_CHANGE",
-      new_value: "submitted",
-      notes: "Project brief submitted by client.",
-      created_at: "2026-10-18T10:30:00Z",
-    },
-    {
-      id: "e2",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      event_type: "QUOTE_ISSUED",
-      previous_value: "in_review",
-      new_value: "quote_sent",
-      notes: "Studio quote issued for ₹24,999 with 50% milestone advance.",
-      created_at: "2026-10-19T09:15:00Z",
-    },
-    {
-      id: "e3",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      event_type: "STATUS_CHANGE",
-      previous_value: "quote_sent",
-      new_value: "accepted",
-      notes: "Client accepted official quote.",
-      created_at: "2026-10-19T14:00:00Z",
-    },
-    {
-      id: "e4",
-      order_id: "d0000001-0000-0000-0000-000000000001",
-      event_type: "STATUS_CHANGE",
-      previous_value: "accepted",
-      new_value: "in_progress",
-      notes: "Advance confirmed; student engineering lead assigned.",
-      created_at: "2026-10-20T10:00:00Z",
-    },
-  ],
-  "ORV-2026-0002": [
-    {
-      id: "e2-1",
-      order_id: "d0000002-0000-0000-0000-000000000002",
-      event_type: "STATUS_CHANGE",
-      new_value: "submitted",
-      created_at: "2026-10-05T09:00:00Z",
-    },
-    {
-      id: "e2-2",
-      order_id: "d0000002-0000-0000-0000-000000000002",
-      event_type: "STATUS_CHANGE",
-      new_value: "delivered",
-      notes: "All 5 4K 9:16 master reels uploaded and shared.",
-      created_at: "2026-10-20T17:00:00Z",
-    },
-  ],
-};
+export const DEMO_EVENTS: Record<string, OrderEvent[]> = {};
 
 /**
  * Fetch all orders for a client
@@ -321,7 +127,7 @@ export async function getClientOrders(clientId?: string): Promise<Order[]> {
 }
 
 /**
- * Fetch a single order by order number (e.g. ORV-2026-0001)
+ * Fetch a single order by order number
  */
 export async function getOrderByNumber(
   orderNumber: string

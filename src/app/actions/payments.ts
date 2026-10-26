@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth/guards";
-import { recordPaymentSchema, voidPaymentSchema } from "@/lib/validation/payments";
+import { recordPaymentSchema, voidPaymentSchema, editPaymentSchema } from "@/lib/validation/payments";
 import { sendPaymentConfirmationEmail } from "@/lib/email";
 
 export type PaymentActionResult = {
@@ -165,4 +165,78 @@ export async function voidPaymentAction(
   revalidatePath(`/admin/orders/${raw.order_number}`);
   revalidatePath(`/dashboard/orders/${raw.order_number}`);
   return { success: true, message: "Payment voided and balance recalculated." };
+}
+
+/**
+ * Admin: Edit an existing payment record.
+ * Updates payment details and logs changes to audit log.
+ */
+export async function editPaymentAction(
+  prevState: PaymentActionResult | null,
+  formData: FormData
+): Promise<PaymentActionResult> {
+  await requireAdmin();
+
+  const raw = {
+    payment_id: formData.get("payment_id") as string,
+    order_id: formData.get("order_id") as string,
+    order_number: formData.get("order_number") as string,
+    amount_inr: Number(formData.get("amount_inr")),
+    payment_type: formData.get("payment_type") as string,
+    method: formData.get("method") as string,
+    reference_utr: (formData.get("reference_utr") as string) || undefined,
+    date_received: formData.get("date_received") as string,
+    notes: (formData.get("notes") as string) || undefined,
+  };
+
+  const parsed = editPaymentSchema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: "Please correct the highlighted errors.",
+      errors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  const supabase = createClient();
+
+  try {
+    const { error: updateError } = await supabase
+      .from("order_payments")
+      .update({
+        amount_inr: parsed.data.amount_inr,
+        payment_type: parsed.data.payment_type,
+        method: parsed.data.method,
+        reference_utr: parsed.data.reference_utr || null,
+        date_received: parsed.data.date_received,
+        notes: parsed.data.notes || null,
+      })
+      .eq("id", parsed.data.payment_id);
+
+    if (updateError) {
+      console.error("[Payments] Edit error:", updateError.message);
+      return { success: false, error: "Failed to update payment." };
+    }
+
+    const { data: authData } = await supabase.auth.getUser();
+    await supabase.from("audit_log").insert({
+      actor_id: authData.user?.id || parsed.data.order_id,
+      action: "PAYMENT_EDITED",
+      entity_type: "order_payments",
+      entity_id: parsed.data.payment_id,
+      metadata: {
+        order_number: parsed.data.order_number,
+        amount_inr: parsed.data.amount_inr,
+        method: parsed.data.method,
+        payment_type: parsed.data.payment_type,
+      },
+    });
+  } catch (err: any) {
+    console.error("[Payments] Edit unexpected error:", err?.message);
+    return { success: false, error: "An unexpected error occurred." };
+  }
+
+  revalidatePath(`/admin/orders/${raw.order_number}`);
+  revalidatePath(`/dashboard/orders/${raw.order_number}`);
+  return { success: true, message: "Payment updated successfully." };
 }

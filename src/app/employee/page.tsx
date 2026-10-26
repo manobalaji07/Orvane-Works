@@ -144,6 +144,9 @@ export default async function EmployeeDashboardPage() {
                       <Badge variant="outline" className="text-[10px]">
                         {order.service_title}
                       </Badge>
+                      <Badge variant="secondary" className="text-[10px] capitalize">
+                        Payment: {order.payment_status.replace(/_/g, " ")}
+                      </Badge>
                     </div>
 
                     <CardTitle className="text-lg hover:text-vermilion transition-colors">

@@ -236,7 +236,7 @@ export function EmployeeManagementClient({
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  placeholder="vignesh@student.tce.edu"
+                  placeholder="candidate@example.com"
                   required
                   className="text-xs"
                 />

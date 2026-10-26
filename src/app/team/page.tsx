@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, CheckCircle2, Clock, Calendar, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CheckCircle2, Clock, Calendar, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -64,70 +64,80 @@ export default async function TeamPage() {
         </p>
       </div>
 
-      {/* Team Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {team.map((member) => (
-          <Card
-            key={member.id}
-            className="overflow-hidden hover:border-primary/50 transition-all flex flex-col justify-between"
-          >
-            <div>
-              {/* Photo */}
-              <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
-                <Image
-                  src={member.avatar_url || "/team/karthik-rajan.jpg"}
-                  alt={member.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover"
-                />
-                <div className="absolute top-3 right-3">
-                  <AvailabilityBadge status={member.availability_status} />
+      {/* Team Cards Grid or Empty State */}
+      {team.length === 0 ? (
+        <div className="rounded-2xl border border-border bg-card p-12 text-center max-w-xl mx-auto space-y-3">
+          <Users className="w-10 h-10 text-muted-foreground mx-auto opacity-40" />
+          <h3 className="font-semibold text-foreground text-base">Specialist Bench Under Review</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            We are currently updating our public directory of student leads and specialists. Verified member profiles will appear here once finalized.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {team.map((member) => (
+            <Card
+              key={member.id}
+              className="overflow-hidden hover:border-primary/50 transition-all flex flex-col justify-between"
+            >
+              <div>
+                {/* Photo */}
+                <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
+                  <Image
+                    src={member.avatar_url || "/brand/logo-icon.png"}
+                    alt={member.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute top-3 right-3">
+                    <AvailabilityBadge status={member.availability_status} />
+                  </div>
                 </div>
+
+                <CardHeader className="space-y-1.5">
+                  <CardTitle className="text-xl">{member.name}</CardTitle>
+                  <p className="text-xs font-semibold text-primary">
+                    {member.designation}
+                  </p>
+                  <CardDescription className="text-xs line-clamp-3 pt-2 leading-relaxed">
+                    {member.bio}
+                  </CardDescription>
+                </CardHeader>
+
+                {/* Specializations Tags */}
+                <CardContent className="pt-0">
+                  <div className="flex flex-wrap gap-1.5">
+                    {member.specializations.map((spec) => (
+                      <span
+                        key={spec}
+                        className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-muted text-foreground/80 border border-border"
+                      >
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
               </div>
 
-              <CardHeader className="space-y-1.5">
-                <CardTitle className="text-xl">{member.name}</CardTitle>
-                <p className="text-xs font-semibold text-primary">
-                  {member.designation}
-                </p>
-                <CardDescription className="text-xs line-clamp-3 pt-2 leading-relaxed">
-                  {member.bio}
-                </CardDescription>
-              </CardHeader>
-
-              {/* Specializations Tags */}
-              <CardContent className="pt-0">
-                <div className="flex flex-wrap gap-1.5">
-                  {member.specializations.map((spec) => (
-                    <span
-                      key={spec}
-                      className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-muted text-foreground/80 border border-border"
-                    >
-                      {spec}
-                    </span>
-                  ))}
-                </div>
-              </CardContent>
-            </div>
-
-            <CardFooter className="pt-0 border-t border-border/60 p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <Link
-                href={`/team/${member.slug}`}
-                className="text-xs font-semibold text-muted-foreground hover:text-primary inline-flex items-center gap-1 transition-colors"
-              >
-                View Profile & Experience
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link href={`/dashboard/orders/new?preferredMember=${member.slug}`}>
-                <Button size="sm" className="font-semibold text-xs whitespace-nowrap">
-                  Request {member.name.split(" ")[0]}
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+              <CardFooter className="pt-0 border-t border-border/60 p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <Link
+                  href={`/team/${member.slug}`}
+                  className="text-xs font-semibold text-muted-foreground hover:text-primary inline-flex items-center gap-1 transition-colors"
+                >
+                  View Profile & Experience
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link href={`/dashboard/orders/new?preferredMember=${member.slug}`}>
+                  <Button size="sm" className="font-semibold text-xs whitespace-nowrap">
+                    Request {member.name.split(" ")[0]}
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Join the Team Callout */}
       <div className="rounded-2xl border border-dashed border-border bg-card p-8 md:p-12 text-center max-w-3xl mx-auto space-y-4">

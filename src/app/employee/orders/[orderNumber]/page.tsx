@@ -78,6 +78,9 @@ export default async function EmployeeOrderDetailPage({
             {order.order_number}
           </span>
           <StatusChip status={order.status} />
+          <Badge variant="outline" className="text-xs capitalize font-medium">
+            Payment: {order.payment_status.replace(/_/g, " ")}
+          </Badge>
         </div>
 
         <Badge variant="accent" className="text-xs">

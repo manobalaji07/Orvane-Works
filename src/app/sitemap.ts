@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getServices, getPortfolioProjects } from "@/lib/data/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://orvane.studio";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://example.com";
 
   const [services, projects] = await Promise.all([
     getServices(),

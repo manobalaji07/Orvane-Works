@@ -67,7 +67,7 @@ Before setting up Orvane locally or in production, ensure you have:
 2. Fill in the required credentials:
    ```env
    # Studio Admin Bootstrap Email
-   ADMIN_EMAIL="admin@orvane.studio"
+   ADMIN_EMAIL="admin@example.com"
 
    # Supabase Configuration
    NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
@@ -76,8 +76,8 @@ Before setting up Orvane locally or in production, ensure you have:
 
    # Transactional Email (Resend)
    RESEND_API_KEY="re_your_resend_api_key"
-   EMAIL_FROM="Orvane Studio <hello@orvane.studio>"
-   COMPANY_INBOX="hello@orvane.studio"
+   EMAIL_FROM="Orvane Works <hello@example.com>"
+   COMPANY_INBOX="hello@example.com"
 
    # Public Form Spam Protection (Cloudflare Turnstile)
    NEXT_PUBLIC_TURNSTILE_SITE_KEY="0x4AAAAAAyour_site_key"
@@ -101,8 +101,8 @@ Run the SQL migration files in sequence using the **Supabase Dashboard SQL Edito
    - Run `supabase/migrations/20261023000003_rate_limiting.sql`
 4. **Auth Triggers & Role Enforcement**:
    - Run `supabase/migrations/20261023000004_auth_triggers.sql`
-5. **Initial Realistic Seed Data**:
-   - Run `supabase/seed.sql` to populate services, packages, specializations, and FAQs (all demo records clearly labelled `[Demo]`).
+5. **Initial Foundational Seed Data**:
+   - Run `supabase/seed.sql` to populate services, packages, specializations, and FAQs.
 
 ### Storage Buckets Setup
 In your Supabase Storage dashboard, create two buckets:
@@ -113,19 +113,19 @@ In your Supabase Storage dashboard, create two buckets:
 
 ## 🔑 Creating the First Administrator
 
-Because Orvane prevents regular users from elevating themselves to the `admin` role, you must bootstrap the first administrator using one of the two methods below:
+Because Orvane Works prevents regular users from elevating themselves to the `admin` role, you must bootstrap the first administrator using one of the two methods below:
 
 ### Method A: Automated CLI Script (Recommended)
 1. Sign up for an account through the web interface (e.g., at `http://localhost:3000/login`).
-2. Run the bootstrap script with your registered email:
+2. Run the bootstrap script with your registered email in `ADMIN_EMAIL`:
    ```bash
-   npm run admin:create admin@orvane.studio
+   ADMIN_EMAIL="admin@example.com" npm run admin:create
    ```
    *The script automatically verifies the profile and updates the role to `admin` with `active` status.*
 
 ### Method B: Supabase SQL Editor
 1. Sign up on the web app with your intended admin email.
-2. In the Supabase Dashboard, open the **SQL Editor**, open [`supabase/create-first-admin.sql`](supabase/create-first-admin.sql), replace `'admin@orvane.studio'` with your registered email, and execute.
+2. In the Supabase Dashboard, open the **SQL Editor**, open [`supabase/create-first-admin.sql`](supabase/create-first-admin.sql), replace `'admin@example.com'` with your registered email, and execute.
 
 ---
 
@@ -193,7 +193,7 @@ npm run test:e2e
 ### Deploying to Netlify or Container Platforms
 - Ensure Node.js 18.17+ or 20+ runtime is specified.
 - Set all environment variables in your deployment dashboard.
-- Set `NEXT_PUBLIC_APP_URL` to your production domain (e.g., `https://orvane.studio`).
+- Set `NEXT_PUBLIC_APP_URL` to your production domain (e.g., `https://yourdomain.com`).
 
 ---
 

@@ -72,46 +72,6 @@ function LoginForm() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Quick Demo Fill Buttons */}
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold text-primary">
-            <span>Quick Demo Credentials</span>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-normal">Click to fill</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              onClick={() => {
-                setEmail("admin@orvane.studio");
-                setPassword("admin1234");
-              }}
-              className="text-[11px] font-medium py-1.5 px-2 rounded bg-card hover:bg-muted border border-border text-foreground transition-colors text-center shadow-xs"
-            >
-              👑 Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEmail("employee@orvane.studio");
-                setPassword("employee1234");
-              }}
-              className="text-[11px] font-medium py-1.5 px-2 rounded bg-card hover:bg-muted border border-border text-foreground transition-colors text-center shadow-xs"
-            >
-              💼 Employee
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEmail("client@orvane.studio");
-                setPassword("client1234");
-              }}
-              className="text-[11px] font-medium py-1.5 px-2 rounded bg-card hover:bg-muted border border-border text-foreground transition-colors text-center shadow-xs"
-            >
-              🚀 Client
-            </button>
-          </div>
-        </div>
-
         {errorMessage && (
           <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-start gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />

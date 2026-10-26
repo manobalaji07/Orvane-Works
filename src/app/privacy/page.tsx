@@ -96,7 +96,7 @@ export default function PrivacyPolicyPage() {
             By submitting an inquiry, creating a client account, or applying to
             join the studio, you provide affirmative consent for us to process your
             data for the stated purpose. You may withdraw consent at any time by
-            contacting hello@orvane.studio or deleting your account from your Client
+            contacting {SITE_CONFIG.email} or deleting your account from your Client
             Portal settings.
           </p>
         </section>
@@ -109,7 +109,7 @@ export default function PrivacyPolicyPage() {
             Under the DPDP Act, clients and applicants may request complete deletion
             of their personal profile, uploaded project references, and contact
             records. Account deletion can be triggered self-service from your Client
-            Portal or by emailing our Data Grievance Lead at hello@orvane.studio.
+            Portal or by emailing our Data Grievance Lead at {SITE_CONFIG.email}.
           </p>
         </section>
 

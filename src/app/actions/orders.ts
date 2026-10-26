@@ -14,6 +14,7 @@ import {
   sendOrderStatusUpdatedEmail,
   sendNewMessageNotificationEmail,
 } from "@/lib/email";
+import { SITE_CONFIG } from "@/lib/constants/site";
 
 export type OrderActionResult = {
   success: boolean;
@@ -148,7 +149,7 @@ export async function postOrderMessageAction(
     };
   }
 
-  const orderNumber = (formData.get("order_number") as string) || "ORV-2026-0001";
+  const orderNumber = (formData.get("order_number") as string) || "";
   const supabase = createClient();
 
   try {
@@ -165,7 +166,7 @@ export async function postOrderMessageAction(
     // Trigger email notification
     await sendNewMessageNotificationEmail({
       recipientName: "Studio Team",
-      recipientEmail: "hello@orvane.studio",
+      recipientEmail: process.env.COMPANY_INBOX || SITE_CONFIG.email || "hello@example.com",
       orderNumber,
       senderName: profile.full_name || "Client",
       messageSnippet: parsed.data.content.slice(0, 100),

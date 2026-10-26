@@ -48,42 +48,50 @@ export function Footer() {
               videos, and high-impact digital assets.
             </p>
             <div className="flex items-center gap-3 pt-2 text-muted-foreground">
-              <a
-                href={SITE_CONFIG.socials.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
-                aria-label="Orvane Works Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href={SITE_CONFIG.socials.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
-                aria-label="Orvane Works LinkedIn"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href={SITE_CONFIG.socials.youtube}
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
-                aria-label="Orvane Works YouTube"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
-              <a
-                href={SITE_CONFIG.socials.github}
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
-                aria-label="Orvane Works GitHub"
-              >
-                <Github className="w-4 h-4" />
-              </a>
+              {SITE_CONFIG.socials.instagram && (
+                <a
+                  href={SITE_CONFIG.socials.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Orvane Works Instagram"
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
+              )}
+              {SITE_CONFIG.socials.linkedin && (
+                <a
+                  href={SITE_CONFIG.socials.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Orvane Works LinkedIn"
+                >
+                  <Linkedin className="w-4 h-4" />
+                </a>
+              )}
+              {SITE_CONFIG.socials.youtube && (
+                <a
+                  href={SITE_CONFIG.socials.youtube}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Orvane Works YouTube"
+                >
+                  <Youtube className="w-4 h-4" />
+                </a>
+              )}
+              {SITE_CONFIG.socials.github && (
+                <a
+                  href={SITE_CONFIG.socials.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Orvane Works GitHub"
+                >
+                  <Github className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
 

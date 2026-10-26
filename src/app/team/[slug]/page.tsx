@@ -67,7 +67,7 @@ export default async function TeamMemberDetailPage({ params }: TeamDetailPagePro
     },
     description: member.bio,
     image: member.avatar_url,
-    url: `https://orvane.studio/team/${member.slug}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL || "https://example.com"}/team/${member.slug}`,
     sameAs: [member.github_url, member.linkedin_url, member.website_url].filter(
       Boolean
     ),
@@ -97,7 +97,7 @@ export default async function TeamMemberDetailPage({ params }: TeamDetailPagePro
         <div className="md:col-span-4 space-y-6">
           <div className="relative aspect-square w-full rounded-2xl overflow-hidden border border-border shadow-md bg-muted">
             <Image
-              src={member.avatar_url || "/team/karthik-rajan.jpg"}
+              src={member.avatar_url || "/brand/logo-icon.png"}
               alt={member.name}
               fill
               priority

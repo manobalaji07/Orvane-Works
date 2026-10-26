@@ -201,75 +201,77 @@ export default async function HomePage() {
       </section>
 
       {/* 3. FEATURED WORK & CASE STUDIES */}
-      <section className="container">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-          <div>
-            <Badge variant="secondary" className="mb-2">
-              Case Studies
-            </Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
-              Selected Work
-            </h2>
-            <p className="text-muted-foreground text-sm md:text-base mt-1 max-w-xl">
-              Real projects delivered for businesses across Madurai and Tamil
-              Nadu, engineered for measurable results.
-            </p>
-          </div>
-          <Link
-            href="/portfolio"
-            className="text-sm font-semibold text-primary inline-flex items-center gap-1 hover:underline underline-offset-4"
-          >
-            Explore all portfolio projects
-            <ArrowUpRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {featuredProjects.map((project) => (
-            <Card
-              key={project.id}
-              className="overflow-hidden hover:border-primary/50 transition-all flex flex-col justify-between"
+      {featuredProjects.length > 0 && (
+        <section className="container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div>
+              <Badge variant="secondary" className="mb-2">
+                Case Studies
+              </Badge>
+              <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
+                Selected Work
+              </h2>
+              <p className="text-muted-foreground text-sm md:text-base mt-1 max-w-xl">
+                Real projects delivered for businesses across Madurai and Tamil
+                Nadu, engineered for measurable results.
+              </p>
+            </div>
+            <Link
+              href="/portfolio"
+              className="text-sm font-semibold text-primary inline-flex items-center gap-1 hover:underline underline-offset-4"
             >
-              <div className="relative aspect-video w-full bg-muted overflow-hidden">
-                <Image
-                  src={project.thumbnail_url}
-                  alt={project.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                  <span>{project.service_title}</span>
-                  <Badge variant="outline">{project.client_name}</Badge>
+              Explore all portfolio projects
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {featuredProjects.map((project) => (
+              <Card
+                key={project.id}
+                className="overflow-hidden hover:border-primary/50 transition-all flex flex-col justify-between"
+              >
+                <div className="relative aspect-video w-full bg-muted overflow-hidden">
+                  <Image
+                    src={project.thumbnail_url}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-500 hover:scale-105"
+                  />
                 </div>
-                <CardTitle className="text-xl">{project.title}</CardTitle>
-                <CardDescription className="line-clamp-2">
-                  {project.challenge}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className="pt-0 flex items-center justify-between border-t border-border/60 p-6">
-                <div className="flex items-center gap-3 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
-                  {Object.entries(project.outcome_metrics)[0] && (
-                    <span>
-                      {Object.entries(project.outcome_metrics)[0][0]}:{" "}
-                      {Object.entries(project.outcome_metrics)[0][1]}
-                    </span>
-                  )}
-                </div>
-                <Link
-                  href={`/portfolio/${project.slug}`}
-                  className="text-xs font-semibold text-primary inline-flex items-center gap-1 hover:underline"
-                >
-                  Read Case Study
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
+                <CardHeader>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                    <span>{project.service_title}</span>
+                    <Badge variant="outline">{project.client_name}</Badge>
+                  </div>
+                  <CardTitle className="text-xl">{project.title}</CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {project.challenge}
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter className="pt-0 flex items-center justify-between border-t border-border/60 p-6">
+                  <div className="flex items-center gap-3 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    {Object.entries(project.outcome_metrics)[0] && (
+                      <span>
+                        {Object.entries(project.outcome_metrics)[0][0]}:{" "}
+                        {Object.entries(project.outcome_metrics)[0][1]}
+                      </span>
+                    )}
+                  </div>
+                  <Link
+                    href={`/portfolio/${project.slug}`}
+                    className="text-xs font-semibold text-primary inline-flex items-center gap-1 hover:underline"
+                  >
+                    Read Case Study
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 4. WORKFLOW PROCESS */}
       <section className="container py-4">
@@ -328,43 +330,45 @@ export default async function HomePage() {
       </section>
 
       {/* 5. SOCIAL PROOF & TESTIMONIALS */}
-      <section className="container">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <Badge variant="accent" className="mb-2">
-            Client Feedback
-          </Badge>
-          <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
-            Trusted by Leaders in Madurai & Beyond
-          </h2>
-        </div>
+      {featuredTestimonials.length > 0 && (
+        <section className="container">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <Badge variant="accent" className="mb-2">
+              Client Feedback
+            </Badge>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
+              Trusted by Leaders in Madurai & Beyond
+            </h2>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredTestimonials.map((t) => (
-            <Card key={t.id} className="flex flex-col justify-between">
-              <CardHeader className="space-y-3">
-                <div className="flex items-center gap-1 text-amber-500">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-sm text-foreground/90 leading-relaxed italic">
-                  &ldquo;{t.content}&rdquo;
-                </p>
-              </CardHeader>
-              <CardFooter className="pt-0 border-t border-border/60 p-6 flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold text-sm text-foreground">
-                    {t.client_name}
-                  </h4>
-                  <p className="text-xs text-muted-foreground">
-                    {t.client_role_company}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredTestimonials.map((t) => (
+              <Card key={t.id} className="flex flex-col justify-between">
+                <CardHeader className="space-y-3">
+                  <div className="flex items-center gap-1 text-amber-500">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-foreground/90 leading-relaxed italic">
+                    &ldquo;{t.content}&rdquo;
                   </p>
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
+                </CardHeader>
+                <CardFooter className="pt-0 border-t border-border/60 p-6 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-sm text-foreground">
+                      {t.client_name}
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {t.client_role_company}
+                    </p>
+                  </div>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 6. SHORT FAQ SECTION */}
       <section className="container max-w-3xl">

@@ -105,7 +105,7 @@ export const DEFAULT_PACKAGES: PackageItem[] = [
   {
     id: "10000000-0000-0000-0000-000000000001",
     service_id: "00000000-0000-0000-0000-000000000001",
-    name: "Starter Studio Website [Demo]",
+    name: "Starter Studio Website",
     slug: "starter-website",
     price_inr: 24999,
     delivery_time_days: 7,
@@ -123,7 +123,7 @@ export const DEFAULT_PACKAGES: PackageItem[] = [
   {
     id: "10000000-0000-0000-0000-000000000002",
     service_id: "00000000-0000-0000-0000-000000000001",
-    name: "Growth Web Platform [Demo]",
+    name: "Growth Web Platform",
     slug: "growth-platform",
     price_inr: 49999,
     delivery_time_days: 14,
@@ -142,7 +142,7 @@ export const DEFAULT_PACKAGES: PackageItem[] = [
   {
     id: "10000000-0000-0000-0000-000000000003",
     service_id: "00000000-0000-0000-0000-000000000002",
-    name: "Reels Creator Sprint [Demo]",
+    name: "Reels Creator Sprint",
     slug: "reels-sprint",
     price_inr: 14999,
     delivery_time_days: 5,
@@ -160,7 +160,7 @@ export const DEFAULT_PACKAGES: PackageItem[] = [
   {
     id: "10000000-0000-0000-0000-000000000004",
     service_id: "00000000-0000-0000-0000-000000000003",
-    name: "Brand Identity Essentials [Demo]",
+    name: "Brand Identity Essentials",
     slug: "brand-identity-essentials",
     price_inr: 18999,
     delivery_time_days: 10,
@@ -177,110 +177,9 @@ export const DEFAULT_PACKAGES: PackageItem[] = [
   },
 ];
 
-export const DEFAULT_PORTFOLIO: PortfolioProject[] = [
-  {
-    id: "40000000-0000-0000-0000-000000000001",
-    title: "Meenakshi Heritage Sweets Web Platform [Demo]",
-    slug: "meenakshi-heritage-sweets",
-    service_id: "00000000-0000-0000-0000-000000000001",
-    service_title: "Web Design & Development",
-    client_name: "Meenakshi Sweets [Demo]",
-    thumbnail_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop&q=80",
-    gallery_urls: [
-      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=80",
-    ],
-    challenge:
-      "A renowned local confectionary brand in Madurai needed a digital storefront that reflected their 40-year heritage while loading instantly on 4G mobile devices.",
-    solution:
-      "Engineered an App Router Next.js architecture with cream/ink design tokens, on-demand revalidation, and direct WhatsApp click-to-order flow.",
-    outcome_metrics: {
-      "Mobile Lighthouse": "98/100",
-      "WhatsApp Inquiries": "+180% [Demo]",
-      "Page Load Time": "0.7s on mobile",
-    },
-    project_url: "https://example.com/demo-project",
-    is_featured: true,
-    display_order: 1,
-  },
-  {
-    id: "40000000-0000-0000-0000-000000000002",
-    title: "Apollo Clinic Health Awareness Reels Campaign [Demo]",
-    slug: "apollo-clinic-reels",
-    service_id: "00000000-0000-0000-0000-000000000002",
-    service_title: "Video Editing & Reels",
-    client_name: "Apollo Clinic Madurai [Demo]",
-    thumbnail_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80",
-    gallery_urls: [
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80",
-    ],
-    challenge:
-      "Medical concepts needed to be simplified into engaging 45-second vertical videos for regional patient education.",
-    solution:
-      "Designed dynamic motion typography in Tamil and English, paired with medical animation overlays and crisp pacing.",
-    outcome_metrics: {
-      "Total Organic Views": "340K+ [Demo]",
-      "Average Retention Rate": "74%",
-      "Appointment Inquiries": "+45% [Demo]",
-    },
-    project_url: "https://example.com/demo-video",
-    is_featured: true,
-    display_order: 2,
-  },
-  {
-    id: "40000000-0000-0000-0000-000000000003",
-    title: "Vedic Roots Organic Brand Identity & Carousels [Demo]",
-    slug: "vedic-roots-brand",
-    service_id: "00000000-0000-0000-0000-000000000003",
-    service_title: "Content & Brand Assets",
-    client_name: "Vedic Roots Farms [Demo]",
-    thumbnail_url: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=80",
-    gallery_urls: [
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=80",
-    ],
-    challenge:
-      "Organic farm-to-table cooperative required brand identity and educational carousel templates to market directly to urban consumers.",
-    solution:
-      "Crafted an earthy visual language, custom typography pairings, packaging mockups, and a library of 15 modular social templates.",
-    outcome_metrics: {
-      "Engagement Rate": "8.4% [Demo]",
-      "Brand Recall": "Top-tier [Demo]",
-    },
-    project_url: "https://example.com/demo-brand",
-    is_featured: true,
-    display_order: 3,
-  },
-];
+export const DEFAULT_PORTFOLIO: PortfolioProject[] = [];
 
-export const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
-  {
-    id: "50000000-0000-0000-0000-000000000001",
-    client_name: "S. Murugan [Demo]",
-    client_role_company: "Managing Director, Meenakshi Sweets [Demo]",
-    rating: 5,
-    content:
-      "Orvane Works' student team delivered faster and with significantly cleaner code than traditional agencies. Our customers in Madurai love the WhatsApp ordering flow.",
-    is_featured: true,
-  },
-  {
-    id: "50000000-0000-0000-0000-000000000002",
-    client_name: "Dr. K. Arulraj [Demo]",
-    client_role_company: "Head Physician, Clinic Centre [Demo]",
-    rating: 5,
-    content:
-      "The reels they edited for our wellness clinic achieved phenomenal reach across Madurai and Trichy. Professional, timely, and very respectful communication.",
-    is_featured: true,
-  },
-  {
-    id: "50000000-0000-0000-0000-000000000003",
-    client_name: "Pooja Sundaram [Demo]",
-    client_role_company: "Co-Founder, Chennai Tech Startup [Demo]",
-    rating: 5,
-    content:
-      "Finding an engineering studio that understands design tokens, sub-second latency, and clean typography in Tamil Nadu was refreshing. Highly recommended.",
-    is_featured: true,
-  },
-];
+export const DEFAULT_TESTIMONIALS: TestimonialItem[] = [];
 
 export const DEFAULT_FAQS: FaqItem[] = [
   {

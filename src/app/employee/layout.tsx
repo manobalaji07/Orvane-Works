@@ -17,7 +17,7 @@ export default async function EmployeeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let profile = { full_name: "Specialist", email: "specialist@orvane.studio" };
+  let profile = { full_name: "Specialist", email: "" };
 
   try {
     const res = await requireEmployee();

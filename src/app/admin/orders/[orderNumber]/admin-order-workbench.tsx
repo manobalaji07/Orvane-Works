@@ -232,7 +232,7 @@ export function AdminOrderWorkbench({
             <Textarea
               value={internalNotes}
               onChange={(e) => setInternalNotes(e.target.value)}
-              placeholder="e.g. Client requested delivery before Deepavali. Student lead Arun Kumar committed to delivering 5 days in advance."
+              placeholder="e.g. Client requested delivery before target date. Assigned specialist committed to delivering 5 days in advance."
               rows={3}
               className="text-xs resize-none bg-background"
             />

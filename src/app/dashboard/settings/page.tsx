@@ -14,12 +14,12 @@ export const metadata = {
 
 export default async function SettingsPage() {
   let profile = {
-    id: "demo-client-id",
-    email: "client@orvane.studio",
-    full_name: "Valued Client",
-    phone: "+91 98765 43210",
+    id: "",
+    email: "",
+    full_name: "",
+    phone: "",
     metadata: {
-      company_name: "Madurai Ventures",
+      company_name: "",
       notify_order_updates: true,
       notify_messages: true,
     },

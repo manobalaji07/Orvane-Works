@@ -78,7 +78,7 @@ Orvane/
 ├── supabase/                  # Database migrations, RLS policies, seeds, and SQL helpers
 │   ├── migrations/            # Version-controlled schema migrations
 │   ├── create-first-admin.sql # First admin bootstrap SQL
-│   └── seed.sql               # Demo data with clearly labelled [Demo] tags
+│   └── seed.sql               # Foundational services, packages, and specializations seed
 ├── next.config.mjs            # Security headers (CSP, HSTS, frame-options)
 ├── playwright.config.ts       # E2E test configuration across 3 viewports
 └── tailwind.config.ts         # Orvane design tokens (colors, typography, radii)

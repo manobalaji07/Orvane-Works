@@ -7,8 +7,10 @@ import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { SITE_CONFIG } from "@/lib/constants/site";
 
+const siteBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://example.com";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://orvane.studio"),
+  metadataBase: new URL(siteBaseUrl),
   title: {
     default: `${SITE_CONFIG.name} | Student-Founded Freelance Studio in Madurai`,
     template: `%s | ${SITE_CONFIG.name}`,
@@ -22,12 +24,12 @@ export const metadata: Metadata = {
     "student engineering studio",
     "Next.js web agency",
   ],
-  authors: [{ name: SITE_CONFIG.name, url: "https://orvane.studio" }],
+  authors: [{ name: SITE_CONFIG.name, url: siteBaseUrl }],
   creator: SITE_CONFIG.name,
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://orvane.studio",
+    url: siteBaseUrl,
     title: `${SITE_CONFIG.name} | Student-Founded Freelance Studio in Madurai`,
     description: SITE_CONFIG.description,
     siteName: SITE_CONFIG.name,
@@ -48,9 +50,9 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   name: SITE_CONFIG.name,
-  image: "https://orvane.studio/og-image.png",
+  image: `${siteBaseUrl}/og-image.png`,
   description: SITE_CONFIG.description,
-  url: "https://orvane.studio",
+  url: siteBaseUrl,
   telephone: SITE_CONFIG.phone,
   email: SITE_CONFIG.email,
   priceRange: "₹₹",
@@ -87,7 +89,7 @@ const jsonLd = {
     SITE_CONFIG.socials.linkedin,
     SITE_CONFIG.socials.youtube,
     SITE_CONFIG.socials.github,
-  ],
+  ].filter(Boolean),
 };
 
 export default function RootLayout({

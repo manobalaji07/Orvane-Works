@@ -142,8 +142,8 @@ export async function deleteMyAccountAction(): Promise<ClientActionResult> {
     await supabase
       .from("profiles")
       .update({
-        full_name: "[Deleted User]",
-        email: `deleted_${user.id.slice(0, 8)}@deleted.orvane.invalid`,
+        full_name: "Deleted User",
+        email: `deleted_${user.id.slice(0, 8)}@deleted.invalid`,
         phone: null,
         avatar_url: null,
         status: "suspended",
