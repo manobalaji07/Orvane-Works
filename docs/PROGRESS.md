@@ -8,4 +8,4 @@
 - [x] Task 5: Storage (public & private buckets, signed URLs, server-side validation)
 - [x] Task 6: Login and email (env validator, DEPLOYMENT.md auth settings, Resend branded emails & SMTP/DNS, Turnstile & rate limiting)
 - [x] Task 7: Logo & Assets (SVG, PNGs, dark-mode hexagon stroke, favicons, manifest, OG image, verification suite)
-- [ ] Task 8: Finish & Deployment documentation
+- [x] Task 8: Finish & Deployment documentation
