@@ -86,6 +86,9 @@ export function AdminOrderWorkbench({
 
       if (res.success) {
         setSuccessMessage("Order governance updated successfully!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
       } else {
         setErrorMessage(res.error || "Failed to update order.");
       }
@@ -236,6 +239,80 @@ export function AdminOrderWorkbench({
               rows={3}
               className="text-xs resize-none bg-background"
             />
+          </div>
+
+          {/* Quick Phase Advancement Guide & Shortcuts */}
+          <div className="p-3.5 rounded-lg bg-muted/40 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="space-y-0.5">
+              <span className="font-semibold text-foreground flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-vermilion inline-block" />
+                Active Lifecycle Phase:
+              </span>
+              <p className="text-muted-foreground text-[11px]">
+                {status === "submitted" && "Client brief received. Next: Set quote & change to 'Quote Sent'."}
+                {status === "in_review" && "Scope under review. Next: Set quote amount and change to 'Quote Sent'."}
+                {status === "quote_sent" && "Quote issued! Waiting for client to click 'Accept Quote' in their portal."}
+                {status === "accepted" && "Client accepted quote! Next: Change to 'In Progress' to begin engineering."}
+                {status === "in_progress" && "Work underway. Next: Upload files & move to 'Awaiting Feedback'."}
+                {status === "awaiting_feedback" && "Awaiting client sign-off. Next: Change to 'Delivered'."}
+                {status === "delivered" && "Deliverables uploaded. Next: Settle final balance & mark 'Closed'."}
+                {status === "closed" && "Order completed and fully signed off."}
+                {status === "cancelled" && "Order has been cancelled."}
+              </p>
+            </div>
+
+            {status === "submitted" && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="text-xs h-7 gap-1 border-vermilion/50 text-vermilion hover:bg-vermilion/10 shrink-0"
+                onClick={() => {
+                  setStatus("quote_sent");
+                  if (!quoteAmount) setQuoteAmount("25000");
+                  if (!quoteTerms) setQuoteTerms("50% advance milestone payment upon acceptance.");
+                }}
+              >
+                <Send className="w-3 h-3" />
+                <span>Quick: Advance to "Quote Sent"</span>
+              </Button>
+            )}
+
+            {status === "accepted" && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="text-xs h-7 gap-1 border-emerald-500/50 text-emerald-600 hover:bg-emerald-500/10 shrink-0"
+                onClick={() => setStatus("in_progress")}
+              >
+                <span>Quick: Advance to "In Progress"</span>
+              </Button>
+            )}
+
+            {status === "in_progress" && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="text-xs h-7 gap-1 shrink-0"
+                onClick={() => setStatus("awaiting_feedback")}
+              >
+                <span>Quick: Advance to "Feedback"</span>
+              </Button>
+            )}
+
+            {status === "awaiting_feedback" && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="text-xs h-7 gap-1 shrink-0"
+                onClick={() => setStatus("delivered")}
+              >
+                <span>Quick: Advance to "Delivered"</span>
+              </Button>
+            )}
           </div>
 
           <div className="flex justify-end pt-1">

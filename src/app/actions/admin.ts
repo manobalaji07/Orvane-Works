@@ -289,6 +289,7 @@ export async function assignOrderEmployeeAction(
     });
 
     revalidatePath("/admin/orders");
+    revalidatePath(`/admin/orders/${orderNumber}`);
     revalidatePath(`/dashboard/orders/${orderNumber}`);
     return { success: true, message: "Student engineering lead assigned." };
   } catch (err: any) {
@@ -367,6 +368,7 @@ export async function updateOrderAdminAction(
     });
 
     revalidatePath("/admin/orders");
+    revalidatePath(`/admin/orders/${orderNumber}`);
     revalidatePath(`/dashboard/orders/${orderNumber}`);
     return { success: true, message: "Order details successfully updated." };
   } catch (err: any) {
