@@ -13,7 +13,8 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
-  Plus,
+  MessageCircle,
+  ArrowUpRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
+import { SITE_CONFIG } from "@/lib/constants/site";
 import type { OrderFile } from "@/lib/data/orders";
 import {
   uploadOrderFileAction,
@@ -64,19 +66,21 @@ export function FilesCard({
   orderId,
   userRole = "client",
 }: FilesCardProps) {
-  const [isUploading, setIsUploading] = useState<"deliverable" | "reference" | null>(null);
+  const [isUploading, setIsUploading] = useState<"deliverable" | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const deliverableInputRef = useRef<HTMLInputElement>(null);
-  const referenceInputRef = useRef<HTMLInputElement>(null);
 
   const deliverables = files.filter((f) => f.is_deliverable);
   const references = files.filter((f) => !f.is_deliverable);
 
   const canUploadDeliverables = userRole === "admin" || userRole === "employee";
-  const canUploadReferences = true; // All roles can upload reference assets
+
+  const whatsappAssetUrl = `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(
+    `Hi ${SITE_CONFIG.name}, I want to share brand assets / reference files for my order (${orderNumber}): `
+  )}`;
 
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -92,7 +96,7 @@ export function FilesCard({
 
     setErrorMessage(null);
     setSuccessMessage(null);
-    setIsUploading(isDeliverable ? "deliverable" : "reference");
+    setIsUploading("deliverable");
 
     try {
       const formData = new FormData();
@@ -123,7 +127,6 @@ export function FilesCard({
     try {
       const res = await getOrderFileDownloadUrlAction(file.id);
       if (res.success && res.url) {
-        // Trigger secure download
         const a = document.createElement("a");
         a.href = res.url;
         a.download = file.file_name;
@@ -144,17 +147,11 @@ export function FilesCard({
 
   return (
     <Card className="border-border">
-      {/* Hidden file inputs */}
+      {/* Hidden file input for admin deliverables */}
       <input
         type="file"
         ref={deliverableInputRef}
         onChange={(e) => handleFileUpload(e, true)}
-        className="hidden"
-      />
-      <input
-        type="file"
-        ref={referenceInputRef}
-        onChange={(e) => handleFileUpload(e, false)}
         className="hidden"
       />
 
@@ -162,14 +159,14 @@ export function FilesCard({
         <div>
           <CardTitle className="text-lg flex items-center gap-2">
             <PackageCheck className="w-4 h-4 text-vermilion" />
-            Deliverables &amp; Project Files
+            Deliverables &amp; Project Assets
           </CardTitle>
           <CardDescription className="text-xs">
-            Stored in private encrypted studio storage with temporary signed download URLs.
+            Review completed work packages and share project assets directly via WhatsApp.
           </CardDescription>
         </div>
         <Badge variant="outline" className="text-xs">
-          {files.length} total files
+          {files.length} vault files
         </Badge>
       </CardHeader>
 
@@ -226,7 +223,7 @@ export function FilesCard({
               <p className="text-[11px] text-muted-foreground/80">
                 {canUploadDeliverables
                   ? "As an administrator, click 'Upload Final Deliverable' above to attach project zip, source code, or media packages."
-                  : "Deliverables appear here upon milestone completion."}
+                  : "Completed project deliverables will appear here upon milestone completion."}
               </p>
             </div>
           ) : (
@@ -281,47 +278,58 @@ export function FilesCard({
           )}
         </div>
 
-        {/* 2. Client References & Brand Assets Section */}
+        {/* 2. Client References & Brand Assets Section (WhatsApp Sharing) */}
         <div className="space-y-3 pt-3 border-t border-border">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <FolderOpen className="w-3.5 h-3.5 text-muted-foreground" />
-              Client References &amp; Brand Assets ({references.length})
+              Client References &amp; Brand Assets
             </h4>
 
-            {canUploadReferences && (
+            <a
+              href={whatsappAssetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button
                 type="button"
                 size="sm"
-                variant="outline"
-                disabled={isUploading !== null}
-                onClick={() => referenceInputRef.current?.click()}
-                className="h-7 text-xs gap-1.5"
+                className="h-7 text-xs gap-1.5 bg-[#25D366] text-white hover:bg-[#20ba59] shadow-sm font-medium"
               >
-                {isUploading === "reference" ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    <span>Uploading Asset...</span>
-                  </>
-                ) : (
-                  <>
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Upload Asset / File</span>
-                  </>
-                )}
+                <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                <span>Share via WhatsApp</span>
               </Button>
-            )}
+            </a>
           </div>
 
-          {references.length === 0 ? (
-            <div className="p-4 rounded-lg bg-muted/20 border border-dashed border-border text-center text-xs text-muted-foreground space-y-1">
-              <p>No reference files or brand assets uploaded yet.</p>
-              <p className="text-[11px] text-muted-foreground/80">
-                Click 'Upload Asset / File' to share design files, logos, reference screenshots, or spec PDFs.
-              </p>
+          {/* WhatsApp Direct Sharing Card */}
+          <div className="p-4 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-xs text-foreground/90 space-y-2">
+            <div className="flex items-center gap-2 font-semibold text-emerald-700 dark:text-emerald-400">
+              <MessageCircle className="w-4 h-4 shrink-0" />
+              <span>Direct WhatsApp Asset Sharing</span>
             </div>
-          ) : (
-            <div className="space-y-2">
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
+              Share your brand logos, Figma links, video raw footage, or reference screenshots directly with our engineering core on WhatsApp. This guarantees high-speed transfers without file size or storage errors.
+            </p>
+            <div className="pt-1">
+              <a
+                href={whatsappAssetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+              >
+                <span>Click here to open WhatsApp with order #{orderNumber}</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+          {/* If any past files were uploaded, display them */}
+          {references.length > 0 && (
+            <div className="space-y-2 pt-2">
+              <span className="text-[11px] font-semibold text-muted-foreground block">
+                Previously Attached Assets ({references.length})
+              </span>
               {references.map((file) => {
                 const Icon = getFileIcon(file.mime_type);
                 const isDownloading = downloadingId === file.id;

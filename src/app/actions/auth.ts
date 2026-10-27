@@ -177,28 +177,37 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
 
   let userId = authData?.user?.id;
 
-  // Gracefully handle Supabase default email rate limit (3 emails/hr on free tier)
-  if (authError && authError.message.toLowerCase().includes("rate limit")) {
-    const adminClient = createAdminClient();
-    const { data: adminCreated, error: adminErr } = await adminClient.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
-        phone: phone || null,
-        requested_role: "client",
-      },
-    });
+  // Gracefully handle Supabase email rate limits or confirmation mail delivery errors
+  if (authError) {
+    const errMsg = authError.message.toLowerCase();
+    const isAlreadyRegistered =
+      errMsg.includes("already registered") ||
+      errMsg.includes("already been registered") ||
+      errMsg.includes("already exists");
 
-    if (adminCreated?.user) {
-      userId = adminCreated.user.id;
-      authError = null;
-    } else if (adminErr) {
-      return {
-        success: false,
-        error: adminErr.message,
-      };
+    if (!isAlreadyRegistered) {
+      // Automatic fallback: provision and auto-confirm user via Admin API
+      const adminClient = createAdminClient();
+      const { data: adminCreated, error: adminErr } = await adminClient.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fullName,
+          phone: phone || null,
+          requested_role: "client",
+        },
+      });
+
+      if (adminCreated?.user) {
+        userId = adminCreated.user.id;
+        authError = null;
+      } else if (adminErr) {
+        return {
+          success: false,
+          error: adminErr.message,
+        };
+      }
     }
   }
 
@@ -275,28 +284,37 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
 
   let userId = authData?.user?.id;
 
-  // Gracefully handle Supabase default email rate limit
-  if (authError && authError.message.toLowerCase().includes("rate limit")) {
-    const adminClient = createAdminClient();
-    const { data: adminCreated, error: adminErr } = await adminClient.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
-        phone,
-        requested_role: "pending_employee",
-      },
-    });
+  // Gracefully handle Supabase email rate limits or confirmation mail delivery errors
+  if (authError) {
+    const errMsg = authError.message.toLowerCase();
+    const isAlreadyRegistered =
+      errMsg.includes("already registered") ||
+      errMsg.includes("already been registered") ||
+      errMsg.includes("already exists");
 
-    if (adminCreated?.user) {
-      userId = adminCreated.user.id;
-      authError = null;
-    } else if (adminErr) {
-      return {
-        success: false,
-        error: adminErr.message,
-      };
+    if (!isAlreadyRegistered) {
+      // Automatic fallback: provision and auto-confirm user via Admin API
+      const adminClient = createAdminClient();
+      const { data: adminCreated, error: adminErr } = await adminClient.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fullName,
+          phone,
+          requested_role: "pending_employee",
+        },
+      });
+
+      if (adminCreated?.user) {
+        userId = adminCreated.user.id;
+        authError = null;
+      } else if (adminErr) {
+        return {
+          success: false,
+          error: adminErr.message,
+        };
+      }
     }
   }
 

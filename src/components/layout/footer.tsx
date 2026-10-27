@@ -1,6 +1,9 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   Instagram,
   Linkedin,
@@ -14,6 +17,35 @@ import { SITE_CONFIG } from "@/lib/constants/site";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const pathname = usePathname();
+
+  const isPortal =
+    pathname?.startsWith("/dashboard") ||
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/employee");
+
+  if (isPortal) {
+    return (
+      <footer className="border-t border-border bg-background/60 py-4 text-xs text-muted-foreground transition-colors">
+        <div className="container flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <span>&copy; {currentYear} {SITE_CONFIG.name}. Built with pride by engineering students in Madurai.</span>
+          <div className="flex items-center gap-4 text-[11px]">
+            <Link href="/privacy" className="hover:text-foreground transition-colors">
+              Privacy Policy (DPDP Draft)
+            </Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-foreground transition-colors">
+              Terms of Service
+            </Link>
+            <span>•</span>
+            <Link href="/contact" className="hover:text-foreground transition-colors">
+              Support
+            </Link>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="border-t border-border bg-background text-foreground pt-16 pb-12 transition-colors">

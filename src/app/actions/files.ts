@@ -73,7 +73,8 @@ export async function uploadOrderFileAction(
       uploader_id: user.id,
       file_name: file.name,
       file_size: file.size,
-      file_url: storagePath,
+      storage_path: storagePath,
+      file_category: isDeliverable ? "deliverable" : "client_reference",
       mime_type: file.type || "application/octet-stream",
       is_deliverable: isDeliverable,
     });
@@ -129,7 +130,7 @@ export async function getOrderFileDownloadUrlAction(
       return { success: false, message: "Unauthorized: Access denied to this vault file." };
     }
 
-    const signedUrl = await createDeliverableSignedUrl(file.file_url, 900);
+    const signedUrl = await createDeliverableSignedUrl(file.storage_path, 900);
     if (!signedUrl) {
       return { success: false, message: "Failed to generate signed download link." };
     }
