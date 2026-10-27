@@ -163,7 +163,7 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
   const supabase = createClient();
 
   // Explicitly assign requested_role as 'client'
-  let { data: authData, error: authError } = await supabase.auth.signUp({
+  const signUpRes = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -174,6 +174,8 @@ export async function signUpClientAction(input: ClientSignupInput): Promise<Acti
       },
     },
   });
+  const authData = signUpRes.data;
+  let authError = signUpRes.error;
 
   let userId = authData?.user?.id;
 
@@ -270,7 +272,7 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
   const supabase = createClient();
 
   // Create auth account with least-privilege 'pending_employee' intent
-  let { data: authData, error: authError } = await supabase.auth.signUp({
+  const signUpRes = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -281,6 +283,8 @@ export async function applyToJoinTeamAction(input: JoinTeamInput): Promise<Actio
       },
     },
   });
+  const authData = signUpRes.data;
+  let authError = signUpRes.error;
 
   let userId = authData?.user?.id;
 

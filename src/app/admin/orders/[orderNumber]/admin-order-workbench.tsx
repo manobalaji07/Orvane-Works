@@ -274,7 +274,7 @@ export function AdminOrderWorkbench({
                 }}
               >
                 <Send className="w-3 h-3" />
-                <span>Quick: Advance to "Quote Sent"</span>
+                <span>Quick: Advance to &quot;Quote Sent&quot;</span>
               </Button>
             )}
 
@@ -286,7 +286,7 @@ export function AdminOrderWorkbench({
                 className="text-xs h-7 gap-1 border-emerald-500/50 text-emerald-600 hover:bg-emerald-500/10 shrink-0"
                 onClick={() => setStatus("in_progress")}
               >
-                <span>Quick: Advance to "In Progress"</span>
+                <span>Quick: Advance to &quot;In Progress&quot;</span>
               </Button>
             )}
 
@@ -298,7 +298,7 @@ export function AdminOrderWorkbench({
                 className="text-xs h-7 gap-1 shrink-0"
                 onClick={() => setStatus("awaiting_feedback")}
               >
-                <span>Quick: Advance to "Feedback"</span>
+                <span>Quick: Advance to &quot;Feedback&quot;</span>
               </Button>
             )}
 
@@ -310,7 +310,7 @@ export function AdminOrderWorkbench({
                 className="text-xs h-7 gap-1 shrink-0"
                 onClick={() => setStatus("delivered")}
               >
-                <span>Quick: Advance to "Delivered"</span>
+                <span>Quick: Advance to &quot;Delivered&quot;</span>
               </Button>
             )}
 
