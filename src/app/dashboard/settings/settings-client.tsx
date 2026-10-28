@@ -111,10 +111,17 @@ export function SettingsClient({ initialProfile }: SettingsClientProps) {
     try {
       await deleteMyAccountAction();
     } catch (err: any) {
-      if (err?.message !== "NEXT_REDIRECT") {
-        alert("Failed to delete account: " + err.message);
-        setIsDeleting(false);
+      const isRedirect =
+        err?.message === "NEXT_REDIRECT" ||
+        err?.message?.includes("NEXT_REDIRECT") ||
+        (typeof err?.digest === "string" && err.digest.includes("NEXT_REDIRECT"));
+
+      if (isRedirect) {
+        throw err;
       }
+
+      alert("Failed to delete account: " + err?.message);
+      setIsDeleting(false);
     }
   };
 

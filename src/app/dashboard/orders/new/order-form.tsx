@@ -97,11 +97,19 @@ export function OrderForm({ services, packages, teamMembers }: OrderFormProps) {
             setIsSubmitting(false);
           }
         } catch (err: any) {
-          // Next.js redirect throws a NEXT_REDIRECT error which is normal behavior
-          if (err?.message !== "NEXT_REDIRECT") {
-            setErrorMessage(err?.message || "Something went wrong.");
-            setIsSubmitting(false);
+          // Next.js redirect throws an internal error (with err.digest starting with NEXT_REDIRECT in production)
+          const isRedirect =
+            err?.message === "NEXT_REDIRECT" ||
+            err?.message?.includes("NEXT_REDIRECT") ||
+            (typeof err?.digest === "string" && err.digest.includes("NEXT_REDIRECT"));
+
+          if (isRedirect) {
+            // Rethrow so Next.js App Router completes the redirect to the new order page
+            throw err;
           }
+
+          setErrorMessage(err?.message || "Something went wrong.");
+          setIsSubmitting(false);
         }
       }}
       className="space-y-8"
