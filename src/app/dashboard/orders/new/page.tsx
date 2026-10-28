@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServices, getPackages } from "@/lib/data/content";
+import { getServices, getPackages, DEFAULT_SERVICES, DEFAULT_PACKAGES } from "@/lib/data/content";
 import { getTeamMembers } from "@/lib/data/team";
 import { SITE_CONFIG } from "@/lib/constants/site";
 import { OrderForm } from "./order-form";
@@ -13,12 +13,23 @@ export const metadata = {
     `Submit a new web development, video editing, or content design brief to ${SITE_CONFIG.name}.`,
 };
 
+// Force dynamic rendering — this page reads auth cookies and user-specific data.
+export const dynamic = "force-dynamic";
+
 export default async function NewOrderPage() {
-  const [services, packages, teamMembers] = await Promise.all([
-    getServices(),
-    getPackages(),
-    getTeamMembers(),
-  ]);
+  let services = DEFAULT_SERVICES;
+  let packages = DEFAULT_PACKAGES;
+  let teamMembers: Awaited<ReturnType<typeof getTeamMembers>> = [];
+
+  try {
+    [services, packages, teamMembers] = await Promise.all([
+      getServices(),
+      getPackages(),
+      getTeamMembers(),
+    ]);
+  } catch {
+    // Silently fall back to defaults — catalog still shows placeholder data
+  }
 
   return (
     <div className="container max-w-4xl py-8 space-y-6">
