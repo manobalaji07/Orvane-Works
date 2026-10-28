@@ -98,20 +98,28 @@ export async function submitContactMessageAction(input: ContactInput) {
       return { success: false, error: "Failed to store message. Please try again." };
     }
 
-    // Send notification to company inbox
-    await sendContactAdminNotificationEmail({
-      name,
-      email,
-      phone: phone || undefined,
-      service: serviceId || undefined,
-      message,
-    });
+    // Send notification to company inbox (resilient to email API errors)
+    try {
+      await sendContactAdminNotificationEmail({
+        name,
+        email,
+        phone: phone || undefined,
+        service: serviceId || undefined,
+        message,
+      });
+    } catch (emailErr) {
+      console.warn("[Contact Admin Email Warning]", emailErr);
+    }
 
     // Send confirmation to the visitor
-    await sendContactConfirmationEmail({
-      name,
-      email,
-    });
+    try {
+      await sendContactConfirmationEmail({
+        name,
+        email,
+      });
+    } catch (confErr) {
+      console.warn("[Contact Confirmation Email Warning]", confErr);
+    }
 
     await logAuditEvent({
       action: "CONTACT_MESSAGE_RECEIVED",

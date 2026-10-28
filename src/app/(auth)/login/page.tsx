@@ -54,8 +54,8 @@ function LoginForm() {
 
       router.push(res.redirectTo || callbackUrl);
       router.refresh();
-    } catch {
-      setErrorMessage("A network error occurred. Please try again.");
+    } catch (err: any) {
+      setErrorMessage(err?.message || "A network error occurred. Please try again.");
       setIsLoading(false);
     }
   }

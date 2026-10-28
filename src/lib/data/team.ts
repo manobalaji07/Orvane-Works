@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 export interface ExperienceEntry {
   id: string;
@@ -43,7 +43,7 @@ export const DEFAULT_TEAM_MEMBERS: TeamMember[] = [];
 export const getTeamMembers = unstable_cache(
   async (): Promise<TeamMember[]> => {
     try {
-      const supabase = createClient();
+      const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("employee_profiles")
         .select("*, profiles(full_name, avatar_url)")

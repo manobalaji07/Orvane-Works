@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 export interface ServiceItem {
   id: string;
@@ -226,7 +226,7 @@ const CACHE_OPTS = { tags: ["public-content"], revalidate: 300 }; // 5 min max-a
 export const getServices = unstable_cache(
   async (): Promise<ServiceItem[]> => {
     try {
-      const supabase = createClient();
+      const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("services")
         .select("*")
@@ -248,7 +248,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceItem | null
 export const getPackages = unstable_cache(
   async (): Promise<PackageItem[]> => {
     try {
-      const supabase = createClient();
+      const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("packages")
         .select("*")
@@ -270,7 +270,7 @@ export async function getPackagesByService(serviceId: string): Promise<PackageIt
 export const getPortfolioProjects = unstable_cache(
   async (): Promise<PortfolioProject[]> => {
     try {
-      const supabase = createClient();
+      const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("portfolio_projects")
         .select("*, services(title)")
@@ -296,7 +296,7 @@ export async function getProjectBySlug(slug: string): Promise<PortfolioProject |
 export const getTestimonials = unstable_cache(
   async (): Promise<TestimonialItem[]> => {
     try {
-      const supabase = createClient();
+      const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
@@ -313,7 +313,7 @@ export const getTestimonials = unstable_cache(
 export const getFaqs = unstable_cache(
   async (): Promise<FaqItem[]> => {
     try {
-      const supabase = createClient();
+      const supabase = createPublicClient();
       const { data, error } = await supabase
         .from("faqs")
         .select("*")

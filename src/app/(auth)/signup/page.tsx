@@ -51,8 +51,8 @@ export default function SignupPage() {
 
       router.push(res.redirectTo || "/dashboard");
       router.refresh();
-    } catch {
-      setErrorMessage("A network error occurred. Please try again.");
+    } catch (err: any) {
+      setErrorMessage(err?.message || "A network error occurred. Please try again.");
       setIsLoading(false);
     }
   }

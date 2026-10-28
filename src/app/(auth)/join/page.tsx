@@ -94,8 +94,8 @@ export default function JoinTeamPage() {
 
       router.push(res.redirectTo || "/awaiting-approval");
       router.refresh();
-    } catch {
-      setErrorMessage("A network error occurred. Please try again.");
+    } catch (err: any) {
+      setErrorMessage(err?.message || "A network error occurred. Please try again.");
       setIsLoading(false);
     }
   }

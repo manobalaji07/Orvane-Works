@@ -6,7 +6,7 @@ const cspHeader = `
   img-src 'self' blob: data: https://images.unsplash.com https://*.supabase.co;
   font-src 'self' data:;
   frame-src 'self' https://challenges.cloudflare.com;
-  connect-src 'self' https://*.supabase.co https://api.resend.com;
+  connect-src 'self' https://*.supabase.co https://api.resend.com https://challenges.cloudflare.com https://*.cloudflare.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -18,6 +18,11 @@ const cspHeader = `
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['localhost:3000', '*.vercel.app'],
+    },
+  },
   images: {
     remotePatterns: [
       {
